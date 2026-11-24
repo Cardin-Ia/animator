@@ -892,15 +892,19 @@ fn back(t: Int) -> List(Path) {
   [Path(tumble(soft(Curve(Point(-139, 140), Point(-72, 52), Point(19, -12)))), t, t + 6, 3)]
 }
 
-// A head of curls, seen from behind as he plunges.
+// A cap of curls on the crown of his head. He falls headfirst, so the crown
+// points down and to the left, and the curls leave his face and neck bare.
 fn hair(j: Int) -> List(Path) {
-  case j == 13 {
+  case j == 11 {
     True -> []
     False -> {
-      let angle = j * 360 / 12 + 15
-      let r = case j == 12 {
-        True -> 0
-        False -> 16 + j % 2 * 17
+      let angle = case j < 7 {
+        True -> 70 + j * 22
+        False -> 95 + { j - 7 } * 28
+      }
+      let r = case j < 7 {
+        True -> 34
+        False -> 18
       }
       let spot = Point(-190 + cos(angle, r), 188 + sin(angle, r))
       [
@@ -1280,15 +1284,19 @@ fn back(t: Int) -> List(Path) {
   [Path(tumble(soft(Curve(Point(-139, 140), Point(-72, 52), Point(19, -12)))), t, t + 6, 3)]
 }
 
-// A head of curls, seen from behind as he plunges.
+// A cap of curls on the crown of his head. He falls headfirst, so the crown
+// points down and to the left, and the curls leave his face and neck bare.
 fn hair(j: Int) -> List(Path) {
-  case j == 13 {
+  case j == 11 {
     True -> []
     False -> {
-      let angle = j * 360 / 12 + 15
-      let r = case j == 12 {
-        True -> 0
-        False -> 16 + j % 2 * 17
+      let angle = case j < 7 {
+        True -> 70 + j * 22
+        False -> 95 + { j - 7 } * 28
+      }
+      let r = case j < 7 {
+        True -> 34
+        False -> 18
       }
       let spot = Point(-190 + cos(angle, r), 188 + sin(angle, r))
       [
