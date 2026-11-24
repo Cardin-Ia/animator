@@ -1520,8 +1520,8 @@ fn extras(k: Int) -> List(Path) {
 `],["icarus_falling_animated",`// ICARUS \u2014 THE LAST FLIGHT
 // Colored ink, molten-gold light, turquoise/indigo wings, and a violent fall.
 // He plunges with his bare back to us: curly head thrown back, one arm
-// flung up beside a leg kicked high behind him, the other arm hanging
-// with fingers spread, one leg flung out, and huge wings rising in a U.
+// flung up, the other hanging with fingers spread, one leg flung out, the
+// other bent at the knee beneath him, and huge wings rising in a U.
 // Shape slider: 0 = tight wings, 100 = wings thrown wide open.
 // For ongoing motion, switch on Loop in the animator.
 
@@ -1719,8 +1719,8 @@ fn sprawled_leg(s: Shape) -> Shape {
   flail(s, Point(-70, 190), 6, 31)
 }
 
-fn raised_leg(s: Shape) -> Shape {
-  flail(s, Point(24, 182), 4, 35)
+fn bent_leg(s: Shape) -> Shape {
+  flail(s, Point(20, 225), 6, 33)
 }
 
 // Each wing beats as one, while every feather flutters on its own tempo.
@@ -1866,15 +1866,10 @@ fn wing_ribs(i: Int, a: Point, b: Point, c: Point, side: Int) -> List(Path) {
 // \u2500\u2500 The figure: a bare, muscular back, seen as he plunges \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 // Every part is a rounded stroke along its bone plus a swelling muscle.
 // All the outlines go down first and the body tone over them, so the parts
-// melt into one silhouette with a single outline around the outside. The
-// leg kicked up behind him is drawn first, so his back hides its hip.
+// melt into one silhouette with a single outline around the outside.
 
 fn figure() -> List(Path) {
   list.flatten([
-    far_leg(halo_part),
-    far_leg(contour),
-    far_leg(flesh),
-    far_leg(shading),
     near(halo_part),
     near(contour),
     near(flesh),
@@ -1884,20 +1879,9 @@ fn figure() -> List(Path) {
   ])
 }
 
-// The leg kicked up behind him: the thigh rises from behind his back, the
-// knee bends, and the shin climbs to a foot high above his head.
-fn far_leg(part) -> List(Path) {
-  list.flatten([
-    part(Point(24, 182), Point(60, -110), 92, 50, 5, 30, raised_leg),
-    part(Point(36, 60), Point(60, -110), 70, 46, 10, 31, raised_leg),
-    part(Point(60, -110), Point(-30, -250), 62, 28, 7, 33, raised_leg),
-    part(Point(-20, -244), Point(-86, -266), 40, 20, 10, 36, raised_leg),
-  ])
-}
-
-// Back, hips and head; the leg flung out to the left; the arm flung up and
-// out;
-// and the arm hanging down with its fingers spread.
+// Back, hips and head; the leg flung out to the left; the other leg bent
+// at the knee beneath him; the arm flung up and out; and the arm hanging
+// down with its fingers spread.
 fn near(part) -> List(Path) {
   list.flatten([
     part(Point(19, 77), Point(202, 173), 0, 62, 10, 32, falling),
@@ -1912,14 +1896,17 @@ fn near(part) -> List(Path) {
     part(Point(19, 77), Point(-80, 10), 60, 34, 10, 38, raised_arm),
     part(Point(-80, 10), Point(-150, -70), 48, 26, 8, 41, raised_arm),
     part(Point(-150, -70), Point(-176, -108), 32, 16, 10, 44, raised_arm),
-    part(Point(202, 173), Point(182, 289), 60, 34, 10, 40, hanging_arm),
-    part(Point(182, 289), Point(233, 394), 48, 26, 8, 43, hanging_arm),
-    part(Point(233, 394), Point(258, 428), 36, 22, 10, 46, hanging_arm),
-    part(Point(258, 428), Point(298, 444), 0, 10, 10, 48, hanging_arm),
-    part(Point(258, 428), Point(289, 463), 0, 10, 10, 49, hanging_arm),
-    part(Point(256, 430), Point(268, 474), 0, 10, 10, 50, hanging_arm),
-    part(Point(250, 428), Point(244, 470), 0, 10, 10, 51, hanging_arm),
-    part(Point(238, 404), Point(210, 424), 0, 12, 10, 52, hanging_arm),
+    part(Point(202, 173), Point(222, 288), 60, 34, 10, 40, hanging_arm),
+    part(Point(222, 288), Point(285, 383), 48, 26, 8, 43, hanging_arm),
+    part(Point(285, 383), Point(308, 418), 36, 22, 10, 46, hanging_arm),
+    part(Point(308, 418), Point(348, 430), 0, 10, 10, 48, hanging_arm),
+    part(Point(308, 418), Point(338, 455), 0, 10, 10, 49, hanging_arm),
+    part(Point(306, 420), Point(318, 465), 0, 10, 10, 50, hanging_arm),
+    part(Point(300, 418), Point(296, 462), 0, 10, 10, 51, hanging_arm),
+    part(Point(290, 395), Point(262, 414), 0, 12, 10, 52, hanging_arm),
+    part(Point(20, 225), Point(150, 335), 90, 50, 10, 37, bent_leg),
+    part(Point(150, 335), Point(62, 440), 60, 28, 7, 40, bent_leg),
+    part(Point(62, 440), Point(26, 466), 34, 16, 10, 43, bent_leg),
   ])
 }
 
@@ -2221,9 +2208,9 @@ fn speed_trails(i: Int) -> List(Path) {
 }
 `],["icarus_falling_charcoal",`// ICARUS \u2014 THE LAST FLIGHT, in charcoal
 // Deep black strokes on pale paper. He plunges with his bare back to us:
-// curly head thrown back, one arm flung up beside a leg kicked high
-// behind him, the other arm hanging with fingers spread, one leg flung out,
-// and huge ragged wings rising in a U. Charcoal drips run down beneath him.
+// curly head thrown back, one arm flung up, the other hanging with fingers
+// spread, one leg flung out, the other bent at the knee beneath him, and
+// huge ragged wings rising in a U. Charcoal drips run down beneath him.
 // Shape slider: 0 = tight wings, 100 = wings thrown wide open.
 // For ongoing motion, switch on Loop in the animator.
 
@@ -2532,8 +2519,8 @@ fn sprawled_leg(s: Shape) -> Shape {
   flail(s, Point(-70, 190), 6, 31)
 }
 
-fn raised_leg(s: Shape) -> Shape {
-  flail(s, Point(24, 182), 4, 35)
+fn bent_leg(s: Shape) -> Shape {
+  flail(s, Point(20, 225), 6, 33)
 }
 
 // Each wing beats as one, while every feather flutters on its own tempo.
@@ -2679,15 +2666,10 @@ fn wing_ribs(i: Int, a: Point, b: Point, c: Point, side: Int) -> List(Path) {
 // \u2500\u2500 The figure: a bare, muscular back, seen as he plunges \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 // Every part is a rounded stroke along its bone plus a swelling muscle.
 // All the outlines go down first and the body tone over them, so the parts
-// melt into one silhouette with a single outline around the outside. The
-// leg kicked up behind him is drawn first, so his back hides its hip.
+// melt into one silhouette with a single outline around the outside.
 
 fn figure() -> List(Path) {
   list.flatten([
-    far_leg(halo_part),
-    far_leg(contour),
-    far_leg(flesh),
-    far_leg(shading),
     near(halo_part),
     near(contour),
     near(flesh),
@@ -2697,20 +2679,9 @@ fn figure() -> List(Path) {
   ])
 }
 
-// The leg kicked up behind him: the thigh rises from behind his back, the
-// knee bends, and the shin climbs to a foot high above his head.
-fn far_leg(part) -> List(Path) {
-  list.flatten([
-    part(Point(24, 182), Point(60, -110), 92, 50, 5, 30, raised_leg),
-    part(Point(36, 60), Point(60, -110), 70, 46, 10, 31, raised_leg),
-    part(Point(60, -110), Point(-30, -250), 62, 28, 7, 33, raised_leg),
-    part(Point(-20, -244), Point(-86, -266), 40, 20, 10, 36, raised_leg),
-  ])
-}
-
-// Back, hips and head; the leg flung out to the left; the arm flung up and
-// out;
-// and the arm hanging down with its fingers spread.
+// Back, hips and head; the leg flung out to the left; the other leg bent
+// at the knee beneath him; the arm flung up and out; and the arm hanging
+// down with its fingers spread.
 fn near(part) -> List(Path) {
   list.flatten([
     part(Point(19, 77), Point(202, 173), 0, 62, 10, 32, falling),
@@ -2725,14 +2696,17 @@ fn near(part) -> List(Path) {
     part(Point(19, 77), Point(-80, 10), 60, 34, 10, 38, raised_arm),
     part(Point(-80, 10), Point(-150, -70), 48, 26, 8, 41, raised_arm),
     part(Point(-150, -70), Point(-176, -108), 32, 16, 10, 44, raised_arm),
-    part(Point(202, 173), Point(182, 289), 60, 34, 10, 40, hanging_arm),
-    part(Point(182, 289), Point(233, 394), 48, 26, 8, 43, hanging_arm),
-    part(Point(233, 394), Point(258, 428), 36, 22, 10, 46, hanging_arm),
-    part(Point(258, 428), Point(298, 444), 0, 10, 10, 48, hanging_arm),
-    part(Point(258, 428), Point(289, 463), 0, 10, 10, 49, hanging_arm),
-    part(Point(256, 430), Point(268, 474), 0, 10, 10, 50, hanging_arm),
-    part(Point(250, 428), Point(244, 470), 0, 10, 10, 51, hanging_arm),
-    part(Point(238, 404), Point(210, 424), 0, 12, 10, 52, hanging_arm),
+    part(Point(202, 173), Point(222, 288), 60, 34, 10, 40, hanging_arm),
+    part(Point(222, 288), Point(285, 383), 48, 26, 8, 43, hanging_arm),
+    part(Point(285, 383), Point(308, 418), 36, 22, 10, 46, hanging_arm),
+    part(Point(308, 418), Point(348, 430), 0, 10, 10, 48, hanging_arm),
+    part(Point(308, 418), Point(338, 455), 0, 10, 10, 49, hanging_arm),
+    part(Point(306, 420), Point(318, 465), 0, 10, 10, 50, hanging_arm),
+    part(Point(300, 418), Point(296, 462), 0, 10, 10, 51, hanging_arm),
+    part(Point(290, 395), Point(262, 414), 0, 12, 10, 52, hanging_arm),
+    part(Point(20, 225), Point(150, 335), 90, 50, 10, 37, bent_leg),
+    part(Point(150, 335), Point(62, 440), 60, 28, 7, 40, bent_leg),
+    part(Point(62, 440), Point(26, 466), 34, 16, 10, 43, bent_leg),
   ])
 }
 
