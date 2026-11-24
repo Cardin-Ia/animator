@@ -1521,7 +1521,7 @@ fn extras(k: Int) -> List(Path) {
 // Colored ink, molten-gold light, turquoise/indigo wings, and a violent fall.
 // He plunges with his bare back to us: curly head thrown back, one arm
 // flung up, the other hanging with fingers spread, one leg flung out, the
-// other bent at the knee beneath him, and huge wings rising in a U.
+// other dangling below him, and huge wings rising in a U.
 // Shape slider: 0 = tight wings, 100 = wings thrown wide open.
 // For ongoing motion, switch on Loop in the animator.
 
@@ -1700,7 +1700,7 @@ fn away(a: Point, b: Point, s: Int) -> Point {
 // The whole figure heaves and rolls as one, while each limb flails on its
 // own beat around the joint where it meets the body.
 fn falling(s: Shape) -> Shape {
-  Bounce(Sway(s, Point(60, 150), 4, 46), 19, 27)
+  Bounce(Sway(s, Point(60, 80), 4, 46), 19, 27)
 }
 
 fn flail(s: Shape, joint: Point, degrees: Int, period: Int) -> Shape {
@@ -1708,19 +1708,19 @@ fn flail(s: Shape, joint: Point, degrees: Int, period: Int) -> Shape {
 }
 
 fn raised_arm(s: Shape) -> Shape {
-  flail(s, Point(19, 77), 9, 22)
+  flail(s, Point(19, 7), 9, 22)
 }
 
 fn hanging_arm(s: Shape) -> Shape {
-  flail(s, Point(202, 173), 11, 26)
+  flail(s, Point(202, 103), 11, 26)
 }
 
 fn sprawled_leg(s: Shape) -> Shape {
-  flail(s, Point(-70, 190), 6, 31)
+  flail(s, Point(-70, 120), 6, 31)
 }
 
-fn bent_leg(s: Shape) -> Shape {
-  flail(s, Point(20, 225), 6, 33)
+fn dangling_leg(s: Shape) -> Shape {
+  flail(s, Point(20, 155), 6, 33)
 }
 
 // Each wing beats as one, while every feather flutters on its own tempo.
@@ -1742,22 +1742,22 @@ fn wing_motion(s: Shape, side: Int, i: Int) -> Shape {
 
 fn shoulder(side: Int) -> Point {
   case side == -1 {
-    True -> Point(45, 125)
-    False -> Point(150, 150)
+    True -> Point(45, 55)
+    False -> Point(150, 80)
   }
 }
 
 fn elbow(side: Int, spread: Int) -> Point {
   case side == -1 {
-    True -> Point(-176 - spread, 46)
-    False -> Point(290 + spread, 80)
+    True -> Point(-176 - spread, -24)
+    False -> Point(290 + spread, 10)
   }
 }
 
 fn wingtip(side: Int, spread: Int) -> Point {
   case side == -1 {
-    True -> Point(-329 - spread, -379)
-    False -> Point(340 + spread, -200)
+    True -> Point(-329 - spread, -415)
+    False -> Point(340 + spread, -270)
   }
 }
 
@@ -1879,34 +1879,34 @@ fn figure() -> List(Path) {
   ])
 }
 
-// Back, hips and head; the leg flung out to the left; the other leg bent
-// at the knee beneath him; the arm flung up and out; and the arm hanging
+// Back, hips and head; the leg flung out to the left; the other leg
+// dangling below him, bent a little at the knee; the arm flung up and out; and the arm hanging
 // down with its fingers spread.
 fn near(part) -> List(Path) {
   list.flatten([
-    part(Point(19, 77), Point(202, 173), 0, 62, 10, 32, falling),
-    part(Point(137, 84), Point(27, 177), 190, 50, 10, 32, falling),
-    part(Point(70, 150), Point(-10, 205), 0, 125, 10, 34, falling),
-    part(Point(-70, 190), Point(25, 232), 0, 110, 10, 35, falling),
-    part(Point(130, 92), Point(150, 58), 0, 56, 10, 38, falling),
-    part(Point(154, 47), Point(166, 27), 0, 84, 10, 40, falling),
-    part(Point(-70, 190), Point(-274, 134), 92, 50, 10, 36, sprawled_leg),
-    part(Point(-274, 134), Point(-350, 267), 62, 30, 7, 39, sprawled_leg),
-    part(Point(-350, 267), Point(-396, 298), 34, 16, 10, 42, sprawled_leg),
-    part(Point(19, 77), Point(-80, 10), 60, 34, 10, 38, raised_arm),
-    part(Point(-80, 10), Point(-150, -70), 48, 26, 8, 41, raised_arm),
-    part(Point(-150, -70), Point(-176, -108), 32, 16, 10, 44, raised_arm),
-    part(Point(202, 173), Point(222, 288), 60, 34, 10, 40, hanging_arm),
-    part(Point(222, 288), Point(285, 383), 48, 26, 8, 43, hanging_arm),
-    part(Point(285, 383), Point(308, 418), 36, 22, 10, 46, hanging_arm),
-    part(Point(308, 418), Point(348, 430), 0, 10, 10, 48, hanging_arm),
-    part(Point(308, 418), Point(338, 455), 0, 10, 10, 49, hanging_arm),
-    part(Point(306, 420), Point(318, 465), 0, 10, 10, 50, hanging_arm),
-    part(Point(300, 418), Point(296, 462), 0, 10, 10, 51, hanging_arm),
-    part(Point(290, 395), Point(262, 414), 0, 12, 10, 52, hanging_arm),
-    part(Point(20, 225), Point(150, 335), 90, 50, 10, 37, bent_leg),
-    part(Point(150, 335), Point(62, 440), 60, 28, 7, 40, bent_leg),
-    part(Point(62, 440), Point(26, 466), 34, 16, 10, 43, bent_leg),
+    part(Point(19, 7), Point(202, 103), 0, 62, 10, 32, falling),
+    part(Point(137, 14), Point(27, 107), 190, 50, 10, 32, falling),
+    part(Point(70, 80), Point(-10, 135), 0, 125, 10, 34, falling),
+    part(Point(-70, 120), Point(25, 162), 0, 110, 10, 35, falling),
+    part(Point(130, 22), Point(150, -12), 0, 56, 10, 38, falling),
+    part(Point(154, -23), Point(166, -43), 0, 84, 10, 40, falling),
+    part(Point(-70, 120), Point(-274, 64), 92, 50, 10, 36, sprawled_leg),
+    part(Point(-274, 64), Point(-350, 197), 62, 30, 7, 39, sprawled_leg),
+    part(Point(-350, 197), Point(-396, 228), 34, 16, 10, 42, sprawled_leg),
+    part(Point(19, 7), Point(-80, -60), 60, 34, 10, 38, raised_arm),
+    part(Point(-80, -60), Point(-150, -140), 48, 26, 8, 41, raised_arm),
+    part(Point(-150, -140), Point(-176, -178), 32, 16, 10, 44, raised_arm),
+    part(Point(202, 103), Point(222, 218), 60, 34, 10, 40, hanging_arm),
+    part(Point(222, 218), Point(285, 313), 48, 26, 8, 43, hanging_arm),
+    part(Point(285, 313), Point(308, 348), 36, 22, 10, 46, hanging_arm),
+    part(Point(308, 348), Point(348, 360), 0, 10, 10, 48, hanging_arm),
+    part(Point(308, 348), Point(338, 385), 0, 10, 10, 49, hanging_arm),
+    part(Point(306, 350), Point(318, 395), 0, 10, 10, 50, hanging_arm),
+    part(Point(300, 348), Point(296, 392), 0, 10, 10, 51, hanging_arm),
+    part(Point(290, 325), Point(262, 344), 0, 12, 10, 52, hanging_arm),
+    part(Point(20, 155), Point(78, 310), 90, 50, 10, 37, dangling_leg),
+    part(Point(78, 310), Point(38, 445), 60, 28, 7, 40, dangling_leg),
+    part(Point(38, 445), Point(24, 480), 32, 16, 10, 43, dangling_leg),
   ])
 }
 
@@ -1991,11 +1991,11 @@ fn hatch(k: Int, a: Point, b: Point, w: Int, t: Int, move) -> List(Path) {
 // and light running along the top of the shoulders.
 fn back_lines() -> List(Path) {
   [
-    Path(falling(line(Curve(Point(122, 100), Point(62, 140), Point(-8, 208)))), 44, 52, 3),
-    Path(falling(line(Curve(Point(28, 108), Point(48, 152), Point(88, 146)))), 46, 52, 2),
-    Path(falling(line(Curve(Point(132, 180), Point(170, 196), Point(190, 160)))), 46, 52, 2),
-    Path(falling(line(Curve(Point(-8, 208), Point(-14, 232), Point(-2, 262)))), 47, 53, 2),
-    Path(falling(highlight(Curve(Point(60, 95), Point(130, 105), Point(190, 140)))), 48, 56, 3),
+    Path(falling(line(Curve(Point(122, 30), Point(62, 70), Point(-8, 138)))), 44, 52, 3),
+    Path(falling(line(Curve(Point(28, 38), Point(48, 82), Point(88, 76)))), 46, 52, 2),
+    Path(falling(line(Curve(Point(132, 110), Point(170, 126), Point(190, 90)))), 46, 52, 2),
+    Path(falling(line(Curve(Point(-8, 138), Point(-14, 162), Point(-2, 192)))), 47, 53, 2),
+    Path(falling(highlight(Curve(Point(60, 25), Point(130, 35), Point(190, 70)))), 48, 56, 3),
   ]
 }
 
@@ -2013,7 +2013,7 @@ fn curls(i: Int) -> List(Path) {
         True -> 30 + i % 4 * 3
         False -> 14
       }
-      let spot = Point(160 + cos(a, radius), 37 + sin(a, radius))
+      let spot = Point(160 + cos(a, radius), 0 - 33 + sin(a, radius))
       let size = 9 + i % 4 * 3
       [
         Path(falling(curl_base(Circle(Point(spot.x - 2, spot.y - 2), size))), 46 + i, 51 + i, 0),
@@ -2034,7 +2034,7 @@ fn loose_feathers(i: Int) -> List(Path) {
       let x = { i * 237 + i * i * 31 } % 910 - 455
       let y = { i * 161 + i * i * 19 } % 790 - 410
       let rest = loose_feathers(i + 1)
-      case y > 0 - 70 && x > 0 - 420 {
+      case y > 0 - 140 && x > 0 - 420 {
         True -> rest
         False -> {
           let base = Point(x, y)
@@ -2209,8 +2209,8 @@ fn speed_trails(i: Int) -> List(Path) {
 `],["icarus_falling_charcoal",`// ICARUS \u2014 THE LAST FLIGHT, in charcoal
 // Deep black strokes on pale paper. He plunges with his bare back to us:
 // curly head thrown back, one arm flung up, the other hanging with fingers
-// spread, one leg flung out, the other bent at the knee beneath him, and
-// huge ragged wings rising in a U. Charcoal drips run down beneath him.
+// spread, one leg flung out, the other dangling below him, and huge
+// ragged wings rising in a U. Charcoal drips run down beneath him.
 // Shape slider: 0 = tight wings, 100 = wings thrown wide open.
 // For ongoing motion, switch on Loop in the animator.
 
@@ -2500,7 +2500,7 @@ fn away(a: Point, b: Point, s: Int) -> Point {
 // The whole figure heaves and rolls as one, while each limb flails on its
 // own beat around the joint where it meets the body.
 fn falling(s: Shape) -> Shape {
-  Bounce(Sway(s, Point(60, 150), 4, 46), 19, 27)
+  Bounce(Sway(s, Point(60, 80), 4, 46), 19, 27)
 }
 
 fn flail(s: Shape, joint: Point, degrees: Int, period: Int) -> Shape {
@@ -2508,19 +2508,19 @@ fn flail(s: Shape, joint: Point, degrees: Int, period: Int) -> Shape {
 }
 
 fn raised_arm(s: Shape) -> Shape {
-  flail(s, Point(19, 77), 9, 22)
+  flail(s, Point(19, 7), 9, 22)
 }
 
 fn hanging_arm(s: Shape) -> Shape {
-  flail(s, Point(202, 173), 11, 26)
+  flail(s, Point(202, 103), 11, 26)
 }
 
 fn sprawled_leg(s: Shape) -> Shape {
-  flail(s, Point(-70, 190), 6, 31)
+  flail(s, Point(-70, 120), 6, 31)
 }
 
-fn bent_leg(s: Shape) -> Shape {
-  flail(s, Point(20, 225), 6, 33)
+fn dangling_leg(s: Shape) -> Shape {
+  flail(s, Point(20, 155), 6, 33)
 }
 
 // Each wing beats as one, while every feather flutters on its own tempo.
@@ -2542,22 +2542,22 @@ fn wing_motion(s: Shape, side: Int, i: Int) -> Shape {
 
 fn shoulder(side: Int) -> Point {
   case side == -1 {
-    True -> Point(45, 125)
-    False -> Point(150, 150)
+    True -> Point(45, 55)
+    False -> Point(150, 80)
   }
 }
 
 fn elbow(side: Int, spread: Int) -> Point {
   case side == -1 {
-    True -> Point(-176 - spread, 46)
-    False -> Point(290 + spread, 80)
+    True -> Point(-176 - spread, -24)
+    False -> Point(290 + spread, 10)
   }
 }
 
 fn wingtip(side: Int, spread: Int) -> Point {
   case side == -1 {
-    True -> Point(-329 - spread, -379)
-    False -> Point(340 + spread, -200)
+    True -> Point(-329 - spread, -415)
+    False -> Point(340 + spread, -270)
   }
 }
 
@@ -2679,34 +2679,34 @@ fn figure() -> List(Path) {
   ])
 }
 
-// Back, hips and head; the leg flung out to the left; the other leg bent
-// at the knee beneath him; the arm flung up and out; and the arm hanging
+// Back, hips and head; the leg flung out to the left; the other leg
+// dangling below him, bent a little at the knee; the arm flung up and out; and the arm hanging
 // down with its fingers spread.
 fn near(part) -> List(Path) {
   list.flatten([
-    part(Point(19, 77), Point(202, 173), 0, 62, 10, 32, falling),
-    part(Point(137, 84), Point(27, 177), 190, 50, 10, 32, falling),
-    part(Point(70, 150), Point(-10, 205), 0, 125, 10, 34, falling),
-    part(Point(-70, 190), Point(25, 232), 0, 110, 10, 35, falling),
-    part(Point(130, 92), Point(150, 58), 0, 56, 10, 38, falling),
-    part(Point(154, 47), Point(166, 27), 0, 84, 10, 40, falling),
-    part(Point(-70, 190), Point(-274, 134), 92, 50, 10, 36, sprawled_leg),
-    part(Point(-274, 134), Point(-350, 267), 62, 30, 7, 39, sprawled_leg),
-    part(Point(-350, 267), Point(-396, 298), 34, 16, 10, 42, sprawled_leg),
-    part(Point(19, 77), Point(-80, 10), 60, 34, 10, 38, raised_arm),
-    part(Point(-80, 10), Point(-150, -70), 48, 26, 8, 41, raised_arm),
-    part(Point(-150, -70), Point(-176, -108), 32, 16, 10, 44, raised_arm),
-    part(Point(202, 173), Point(222, 288), 60, 34, 10, 40, hanging_arm),
-    part(Point(222, 288), Point(285, 383), 48, 26, 8, 43, hanging_arm),
-    part(Point(285, 383), Point(308, 418), 36, 22, 10, 46, hanging_arm),
-    part(Point(308, 418), Point(348, 430), 0, 10, 10, 48, hanging_arm),
-    part(Point(308, 418), Point(338, 455), 0, 10, 10, 49, hanging_arm),
-    part(Point(306, 420), Point(318, 465), 0, 10, 10, 50, hanging_arm),
-    part(Point(300, 418), Point(296, 462), 0, 10, 10, 51, hanging_arm),
-    part(Point(290, 395), Point(262, 414), 0, 12, 10, 52, hanging_arm),
-    part(Point(20, 225), Point(150, 335), 90, 50, 10, 37, bent_leg),
-    part(Point(150, 335), Point(62, 440), 60, 28, 7, 40, bent_leg),
-    part(Point(62, 440), Point(26, 466), 34, 16, 10, 43, bent_leg),
+    part(Point(19, 7), Point(202, 103), 0, 62, 10, 32, falling),
+    part(Point(137, 14), Point(27, 107), 190, 50, 10, 32, falling),
+    part(Point(70, 80), Point(-10, 135), 0, 125, 10, 34, falling),
+    part(Point(-70, 120), Point(25, 162), 0, 110, 10, 35, falling),
+    part(Point(130, 22), Point(150, -12), 0, 56, 10, 38, falling),
+    part(Point(154, -23), Point(166, -43), 0, 84, 10, 40, falling),
+    part(Point(-70, 120), Point(-274, 64), 92, 50, 10, 36, sprawled_leg),
+    part(Point(-274, 64), Point(-350, 197), 62, 30, 7, 39, sprawled_leg),
+    part(Point(-350, 197), Point(-396, 228), 34, 16, 10, 42, sprawled_leg),
+    part(Point(19, 7), Point(-80, -60), 60, 34, 10, 38, raised_arm),
+    part(Point(-80, -60), Point(-150, -140), 48, 26, 8, 41, raised_arm),
+    part(Point(-150, -140), Point(-176, -178), 32, 16, 10, 44, raised_arm),
+    part(Point(202, 103), Point(222, 218), 60, 34, 10, 40, hanging_arm),
+    part(Point(222, 218), Point(285, 313), 48, 26, 8, 43, hanging_arm),
+    part(Point(285, 313), Point(308, 348), 36, 22, 10, 46, hanging_arm),
+    part(Point(308, 348), Point(348, 360), 0, 10, 10, 48, hanging_arm),
+    part(Point(308, 348), Point(338, 385), 0, 10, 10, 49, hanging_arm),
+    part(Point(306, 350), Point(318, 395), 0, 10, 10, 50, hanging_arm),
+    part(Point(300, 348), Point(296, 392), 0, 10, 10, 51, hanging_arm),
+    part(Point(290, 325), Point(262, 344), 0, 12, 10, 52, hanging_arm),
+    part(Point(20, 155), Point(78, 310), 90, 50, 10, 37, dangling_leg),
+    part(Point(78, 310), Point(38, 445), 60, 28, 7, 40, dangling_leg),
+    part(Point(38, 445), Point(24, 480), 32, 16, 10, 43, dangling_leg),
   ])
 }
 
@@ -2791,11 +2791,11 @@ fn hatch(k: Int, a: Point, b: Point, w: Int, t: Int, move) -> List(Path) {
 // and light running along the top of the shoulders.
 fn back_lines() -> List(Path) {
   [
-    Path(falling(line(Curve(Point(122, 100), Point(62, 140), Point(-8, 208)))), 44, 52, 3),
-    Path(falling(line(Curve(Point(28, 108), Point(48, 152), Point(88, 146)))), 46, 52, 2),
-    Path(falling(line(Curve(Point(132, 180), Point(170, 196), Point(190, 160)))), 46, 52, 2),
-    Path(falling(line(Curve(Point(-8, 208), Point(-14, 232), Point(-2, 262)))), 47, 53, 2),
-    Path(falling(highlight(Curve(Point(60, 95), Point(130, 105), Point(190, 140)))), 48, 56, 3),
+    Path(falling(line(Curve(Point(122, 30), Point(62, 70), Point(-8, 138)))), 44, 52, 3),
+    Path(falling(line(Curve(Point(28, 38), Point(48, 82), Point(88, 76)))), 46, 52, 2),
+    Path(falling(line(Curve(Point(132, 110), Point(170, 126), Point(190, 90)))), 46, 52, 2),
+    Path(falling(line(Curve(Point(-8, 138), Point(-14, 162), Point(-2, 192)))), 47, 53, 2),
+    Path(falling(highlight(Curve(Point(60, 25), Point(130, 35), Point(190, 70)))), 48, 56, 3),
   ]
 }
 
@@ -2813,7 +2813,7 @@ fn curls(i: Int) -> List(Path) {
         True -> 30 + i % 4 * 3
         False -> 14
       }
-      let spot = Point(160 + cos(a, radius), 37 + sin(a, radius))
+      let spot = Point(160 + cos(a, radius), 0 - 33 + sin(a, radius))
       let size = 9 + i % 4 * 3
       [
         Path(falling(curl_base(Circle(Point(spot.x - 2, spot.y - 2), size))), 46 + i, 51 + i, 0),
@@ -2834,7 +2834,7 @@ fn loose_feathers(i: Int) -> List(Path) {
       let x = { i * 237 + i * i * 31 } % 910 - 455
       let y = { i * 161 + i * i * 19 } % 790 - 410
       let rest = loose_feathers(i + 1)
-      case y > 0 - 70 && x > 0 - 420 {
+      case y > 0 - 140 && x > 0 - 420 {
         True -> rest
         False -> {
           let base = Point(x, y)
