@@ -791,7 +791,7 @@ fn body() -> List(Path) {
     bones(flesh),
     bones(shading),
     back(16),
-    hair(0),
+    hair(),
   ])
 }
 
@@ -892,32 +892,10 @@ fn back(t: Int) -> List(Path) {
   [Path(tumble(soft(Curve(Point(-139, 140), Point(-72, 52), Point(19, -12)))), t, t + 6, 3)]
 }
 
-// A cap of curls on the crown of his head. He falls headfirst, so the crown
-// points down and to the left, and the curls leave his face and neck bare.
-fn hair(j: Int) -> List(Path) {
-  case j == 11 {
-    True -> []
-    False -> {
-      let angle = case j < 7 {
-        True -> 70 + j * 22
-        False -> 95 + { j - 7 } * 28
-      }
-      let r = case j < 7 {
-        True -> 34
-        False -> 18
-      }
-      let spot = Point(-190 + cos(angle, r), 188 + sin(angle, r))
-      [
-        Path(
-          tumble(curl(Arc(spot, 9 + j % 3 * 2, j * 70, j * 70 + 290))),
-          14 + j,
-          16 + j,
-          2,
-        ),
-        ..hair(j + 1)
-      ]
-    }
-  }
+// Plain, close-cropped hair on the crown of his head. He falls headfirst,
+// so the crown points down and to the left; his face and neck stay bare.
+fn hair() -> List(Path) {
+  [Path(tumble(hair_tone(Arc(Point(-190, 188), 31, 70, 215))), 14, 19, 14)]
 }
 
 // A wing: a bone from shoulder to wrist to tip, with long feathers fanning
@@ -1051,8 +1029,8 @@ fn light(shape: Shape) -> Shape {
   Faded(Filled(shape, Rgb(240, 232, 216)), 40)
 }
 
-fn curl(shape: Shape) -> Shape {
-  Colored(shape, Rgb(14, 12, 10))
+fn hair_tone(shape: Shape) -> Shape {
+  Faded(Colored(shape, Rgb(22, 19, 16)), 72)
 }
 
 fn feather_fill(shape: Shape) -> Shape {
@@ -1183,7 +1161,7 @@ fn body() -> List(Path) {
     bones(flesh),
     bones(shading),
     back(16),
-    hair(0),
+    hair(),
   ])
 }
 
@@ -1284,32 +1262,10 @@ fn back(t: Int) -> List(Path) {
   [Path(tumble(soft(Curve(Point(-139, 140), Point(-72, 52), Point(19, -12)))), t, t + 6, 3)]
 }
 
-// A cap of curls on the crown of his head. He falls headfirst, so the crown
-// points down and to the left, and the curls leave his face and neck bare.
-fn hair(j: Int) -> List(Path) {
-  case j == 11 {
-    True -> []
-    False -> {
-      let angle = case j < 7 {
-        True -> 70 + j * 22
-        False -> 95 + { j - 7 } * 28
-      }
-      let r = case j < 7 {
-        True -> 34
-        False -> 18
-      }
-      let spot = Point(-190 + cos(angle, r), 188 + sin(angle, r))
-      [
-        Path(
-          tumble(curl(Arc(spot, 9 + j % 3 * 2, j * 70, j * 70 + 290))),
-          14 + j,
-          16 + j,
-          2,
-        ),
-        ..hair(j + 1)
-      ]
-    }
-  }
+// Plain, close-cropped hair on the crown of his head. He falls headfirst,
+// so the crown points down and to the left; his face and neck stay bare.
+fn hair() -> List(Path) {
+  [Path(tumble(hair_tone(Arc(Point(-190, 188), 31, 70, 215))), 14, 19, 14)]
 }
 
 // A wing: a bone from shoulder to wrist to tip, with long feathers fanning
@@ -1443,8 +1399,8 @@ fn light(shape: Shape) -> Shape {
   Glow(Faded(Filled(shape, Rgb(235, 240, 255)), 45), 16)
 }
 
-fn curl(shape: Shape) -> Shape {
-  Glow(Faded(Colored(shape, Rgb(242, 246, 255)), 80), 8)
+fn hair_tone(shape: Shape) -> Shape {
+  Glow(Faded(Colored(shape, Rgb(242, 246, 255)), 42), 8)
 }
 
 fn feather_fill(shape: Shape) -> Shape {
@@ -1519,10 +1475,10 @@ fn extras(k: Int) -> List(Path) {
 }
 `],["icarus_falling_animated",`// ICARUS \u2014 THE LAST FLIGHT
 // Colored ink, molten-gold light, turquoise/indigo wings, and a violent fall.
-// He tumbles backward and down with his bare back to us: curly head
+// He tumbles backward and down with his bare back to us: head
 // thrown back, one leg kicked up and bent, the other trailing, one arm
-// reaching up, the other hanging with fingers spread. Huge wings spread
-// open from his shoulder blades, one on each side of his spine, over his
+// reaching up, the other hanging with fingers spread. Huge broken wings
+// spread from his shoulder blades, one on each side of his spine, over his
 // back and the root of his kicked leg.
 // Shape slider: 0 = tight wings, 100 = wings thrown wide open.
 // For ongoing motion, switch on Loop in the animator.
@@ -1577,16 +1533,8 @@ fn highlight(s: Shape) -> Shape {
   Faded(Colored(s, Rgb(255, 201, 136)), 60)
 }
 
-fn curl_base(s: Shape) -> Shape {
+fn hair_base(s: Shape) -> Shape {
   Filled(s, Rgb(28, 30, 42))
-}
-
-fn curl_light(s: Shape) -> Shape {
-  Faded(Colored(s, Rgb(225, 155, 107)), 59)
-}
-
-fn curl_dark(s: Shape) -> Shape {
-  Colored(s, Rgb(20, 29, 42))
 }
 
 fn bone_glow(s: Shape) -> Shape {
@@ -1707,7 +1655,11 @@ fn trailing_leg(s: Shape) -> Shape {
 // over his back and limbs. Rows of feathers overlap like roof tiles: long
 // dark flight feathers at the trailing edge, shorter and paler coverts up
 // to the gilded leading edge, and soft scapulars where each wing meets his
-// back. The right wing is ragged: it is missing flight feathers.
+// back. Both wings are broken. The upper one is snapped at the wrist: its
+// hand is wrenched the wrong way and flops loose on the break. The lower
+// one is snapped at the elbow: the forearm and hand hang crooked and swing
+// limp. Splintered bone shows at each break, flight feathers are missing
+// or snapped off short, and the loose ones stick out askew.
 
 // A direction on a wing: \`sweep\` degrees from straight out of his back
 // toward his feet. The two wings mirror each other across the spine.
@@ -1754,12 +1706,47 @@ fn elbow(side: Int, spread: Int) -> Point {
   reach(shoulder(side), side, 25 + opening(spread), span(side, 105))
 }
 
+// How far each break wrenches the bone beyond it: the lower wing is bent at
+// the elbow, the upper one at the wrist, both against the way a wing folds.
+fn elbow_snap(side: Int) -> Int {
+  case side == 1 {
+    True -> 0 - 60
+    False -> 0
+  }
+}
+
+fn wrist_snap(side: Int) -> Int {
+  case side == 1 {
+    True -> 95
+    False -> 0 - 80
+  }
+}
+
 fn wrist(side: Int, spread: Int) -> Point {
-  reach(elbow(side, spread), side, 35 + opening(spread), span(side, 95))
+  reach(elbow(side, spread), side, 35 + opening(spread) + elbow_snap(side), span(side, 95))
 }
 
 fn wingtip(side: Int, spread: Int) -> Point {
-  reach(wrist(side, spread), side, 50 + opening(spread), span(side, 80))
+  let bend = elbow_snap(side) + wrist_snap(side)
+  reach(wrist(side, spread), side, 50 + opening(spread) + bend, span(side, 80))
+}
+
+// Where each wing is broken.
+fn break_point(side: Int, e: Point, w: Point) -> Point {
+  case side == 1 {
+    True -> e
+    False -> w
+  }
+}
+
+// What lies beyond a break (hang 1) flops loose around it on its own quick
+// beat, on top of the beat of the whole wing.
+fn limp(s: Shape, side: Int, flex: Int, at: Point, hang: Int) -> Shape {
+  let period = case side == 1 {
+    True -> 13
+    False -> 10
+  }
+  wing_motion(Sway(s, at, hang * 11, period), side, flex)
 }
 
 // Drawn from the bottom layer up: flight feathers, the leading edge, then
@@ -1770,33 +1757,53 @@ fn wing(side: Int, spread: Int) -> List(Path) {
   let w = wrist(side, spread)
   let t = wingtip(side, spread)
   let o = opening(spread)
+  let at = break_point(side, e, w)
+  let fore = elbow_snap(side)
+  let hand = fore + wrist_snap(side)
+  let loose_fore = { side + 1 } / 2
+  let mid = along(r, e, 1, 4)
+  let reach_in = case side == 1 {
+    True -> along(r, e, 9, 10)
+    False -> w
+  }
   list.flatten([
-    feather_row(0, 11, w, t, 90 + o, 24 + o, 165, 245, 0, side, 16),
-    feather_row(0, 10, e, w, 104, 84, 172, 198, 1, side, 20),
-    feather_row(0, 5, along(r, e, 1, 4), along(r, e, 7, 8), 100, 95, 128, 170, 2, side, 24),
+    feather_row(0, 11, w, t, 90 + o, 24 + o, 165, 245, 0, side, 16, hand, at, 1),
+    feather_row(0, 10, e, w, 104, 84, 172, 198, 1, side, 20, fore, at, loose_fore),
+    feather_row(0, 5, mid, along(r, e, 7, 8), 100, 95, 128, 170, 2, side, 24, 0, at, 0),
     wing_edge(r, e, w, t, side),
-    feather_row(0, 7, w, t, 86 + o, 38 + o, 100, 84, 3, side, 30),
-    feather_row(0, 10, e, w, 94, 88, 104, 96, 3, side, 30),
-    feather_row(0, 11, along(r, e, 1, 4), w, 98, 88, 70, 62, 4, side, 36),
-    feather_row(0, 5, w, t, 82 + o, 46 + o, 38, 30, 5, side, 40),
-    feather_row(0, 10, r, w, 98, 88, 40, 36, 5, side, 40),
-    feather_row(0, 5, r, along(r, e, 1, 2), 122, 104, 62, 74, 6, side, 46),
+    feather_row(0, 7, w, t, 86 + o, 38 + o, 100, 84, 3, side, 30, hand, at, 1),
+    feather_row(0, 10, e, w, 94, 88, 104, 96, 3, side, 30, fore, at, loose_fore),
+    feather_row(0, 11, mid, reach_in, 98, 88, 70, 62, 4, side, 36, 0, at, 0),
+    feather_row(0, 5, w, t, 82 + o, 46 + o, 38, 30, 5, side, 40, hand, at, 1),
+    feather_row(0, 10, r, reach_in, 98, 88, 40, 36, 5, side, 40, 0, at, 0),
+    feather_row(0, 5, r, along(r, e, 1, 2), 122, 104, 62, 74, 6, side, 46, 0, at, 0),
+    wing_break(r, e, w, t, side),
   ])
 }
 
 // One row of feathers rooted along the line from \`a\` to \`b\`. Their sweep
-// runs from \`s0\` to \`s1\` and their length from \`l0\` to \`l1\`.
-fn feather_row(i: Int, n: Int, a: Point, b: Point, s0: Int, s1: Int, l0: Int, l1: Int, kind: Int, side: Int, t: Int) -> List(Path) {
+// runs from \`s0\` to \`s1\` and their length from \`l0\` to \`l1\`, all bent
+// a further \`bend\` degrees by the breaks. Beyond a break (hang 1) the long
+// feathers stick out askew, and some are snapped off short.
+fn feather_row(i: Int, n: Int, a: Point, b: Point, s0: Int, s1: Int, l0: Int, l1: Int, kind: Int, side: Int, t: Int, bend: Int, at: Point, hang: Int) -> List(Path) {
   case i == n {
     True -> []
     False -> {
       let base = along(a, b, i, n - 1)
-      let sweep = s0 + { s1 - s0 } * i / { n - 1 }
-      let length = span(side, l0 + { l1 - l0 } * i / { n - 1 })
+      let askew = case kind < 3 {
+        True -> { i * 37 % 5 - 2 } * 8 * hang
+        False -> 0
+      }
+      let sweep = s0 + { s1 - s0 } * i / { n - 1 } + bend + askew
+      let full = span(side, l0 + { l1 - l0 } * i / { n - 1 })
+      let length = case kind < 2 && i % 4 == 1 {
+        True -> full * 11 / 20
+        False -> full
+      }
       let tip = reach(base, side, sweep, length)
       list.append(
-        feather(kind, base, tip, i, side, t + i),
-        feather_row(i + 1, n, a, b, s0, s1, l0, l1, kind, side, t),
+        feather(kind, base, tip, i, side, t + i, at, hang),
+        feather_row(i + 1, n, a, b, s0, s1, l0, l1, kind, side, t, bend, at, hang),
       )
     }
   }
@@ -1804,15 +1811,15 @@ fn feather_row(i: Int, n: Int, a: Point, b: Point, s0: Int, s1: Int, l0: Int, l1
 
 // Kinds: 0 primaries, 1 secondaries, 2 tertials (long flight feathers);
 // 3 greater, 4 median and 5 lesser coverts; 6 scapulars.
-fn feather(kind: Int, base: Point, tip: Point, i: Int, side: Int, t: Int) -> List(Path) {
+fn feather(kind: Int, base: Point, tip: Point, i: Int, side: Int, t: Int, at: Point, hang: Int) -> List(Path) {
   case kind < 3 {
-    True -> flight_feather(kind, base, tip, i, side, t)
-    False -> covert(kind, base, tip, i, side, t)
+    True -> flight_feather(kind, base, tip, i, side, t, at, hang)
+    False -> covert(kind, base, tip, i, side, t, at, hang)
   }
 }
 
-fn flight_feather(kind: Int, base: Point, tip: Point, i: Int, side: Int, t: Int) -> List(Path) {
-  let torn = side == 1 && kind == 0 && { i == 3 || i == 7 }
+fn flight_feather(kind: Int, base: Point, tip: Point, i: Int, side: Int, t: Int, at: Point, hang: Int) -> List(Path) {
+  let torn = { kind < 2 && i % 4 == 3 } || { kind == 0 && i == 6 + side } || near(base, at, 30)
   case torn {
     True -> []
     False -> {
@@ -1820,7 +1827,7 @@ fn flight_feather(kind: Int, base: Point, tip: Point, i: Int, side: Int, t: Int)
         True -> 2
         False -> 1
       }
-      let m = fn(s: Shape) { wing_motion(s, side, flex) }
+      let m = fn(s: Shape) { limp(s, side, flex, at, hang) }
       let tone = case kind {
         0 -> i % 2 * 4
         1 -> 1 + i % 2
@@ -1850,8 +1857,8 @@ fn flight_feather(kind: Int, base: Point, tip: Point, i: Int, side: Int, t: Int)
   }
 }
 
-fn covert(kind: Int, base: Point, tip: Point, i: Int, side: Int, t: Int) -> List(Path) {
-  let m = fn(s: Shape) { wing_motion(s, side, 1) }
+fn covert(kind: Int, base: Point, tip: Point, i: Int, side: Int, t: Int, at: Point, hang: Int) -> List(Path) {
+  let m = fn(s: Shape) { limp(s, side, 1, at, hang) }
   let tone = case kind {
     3 -> 2 - i % 2
     4 -> i % 2
@@ -1865,17 +1872,25 @@ fn covert(kind: Int, base: Point, tip: Point, i: Int, side: Int, t: Int) -> List
     _ -> 15
   }
   let f = scale(base, tip, width)
-  let body = [
-    Path(m(covert_fill(f, tone)), t, t + 6, 0),
-    Path(m(covert_ink(f)), t + 1, t + 7, 1),
-  ]
-  case kind == 6 {
+  let body = case near(base, at, 34) {
+    True -> []
+    False -> [
+      Path(m(covert_fill(f, tone)), t, t + 6, 0),
+      Path(m(covert_ink(f)), t + 1, t + 7, 1),
+    ]
+  }
+  case kind == 6 && body != [] {
     True -> {
       let shade = Leaf(Point(base.x - 5, base.y + 8), Point(tip.x - 5, tip.y + 8), width)
       [Path(m(wing_shadow(shade)), t, t + 5, 0), ..body]
     }
     False -> body
   }
+}
+
+// Whether \`p\` lies within \`d\` of \`q\`.
+fn near(p: Point, q: Point, d: Int) -> Bool {
+  { p.x - q.x } * { p.x - q.x } + { p.y - q.y } * { p.y - q.y } < d * d
 }
 
 // A covert: narrow where it is rooted, broad and rounded at its free end.
@@ -1905,22 +1920,88 @@ fn scale(base: Point, tip: Point, width: Int) -> Shape {
   ])
 }
 
-// The gilded spar along the leading edge, in two smooth bends.
+// The gilded spar along the leading edge, snapped in two at the break: the
+// piece still on his back, and the piece beyond, each ending in splinters.
+// The bone runs from \`before\` into the break, and out of it toward \`after\`.
 fn wing_edge(r: Point, e: Point, w: Point, t: Point, side: Int) -> List(Path) {
+  let at = break_point(side, e, w)
   let m = fn(s: Shape) { wing_motion(s, side, 1) }
-  let joint = along(e, w, 1, 2)
-  let inner = Curve(r, e, joint)
-  let outer = Curve(joint, w, t)
-  [
-    Path(m(bone_glow(inner)), 12, 30, 18),
-    Path(m(bone_glow(outer)), 14, 34, 14),
-    Path(m(bone_dark(inner)), 13, 32, 15),
-    Path(m(bone_dark(outer)), 15, 35, 12),
-    Path(m(bone_main(inner)), 14, 33, 8),
-    Path(m(bone_main(outer)), 16, 36, 6),
-    Path(m(bone_light(inner)), 15, 34, 2),
-    Path(m(bone_light(outer)), 17, 36, 2),
+  let k = fn(s: Shape) { limp(s, side, 1, at, 1) }
+  let before = case side == 1 {
+    True -> along(r, e, 1, 2)
+    False -> e
+  }
+  let after = case side == 1 {
+    True -> w
+    False -> along(w, t, 1, 2)
+  }
+  let end_in = along(before, at, 9, 10)
+  let end_out = along(at, after, 1, 8)
+  let inner = case side == 1 {
+    True -> Line(r, end_in)
+    False -> Curve(r, e, end_in)
+  }
+  let outer = case side == 1 {
+    True -> Curve(end_out, w, t)
+    False -> Line(end_out, t)
+  }
+  list.flatten([
+    [
+      Path(m(bone_glow(inner)), 12, 30, 18),
+      Path(k(bone_glow(outer)), 14, 34, 14),
+      Path(m(bone_dark(inner)), 13, 32, 15),
+      Path(k(bone_dark(outer)), 15, 35, 12),
+      Path(m(bone_main(inner)), 14, 33, 8),
+      Path(k(bone_main(outer)), 16, 36, 6),
+      Path(m(bone_light(inner)), 15, 34, 2),
+      Path(k(bone_light(outer)), 17, 36, 2),
+    ],
+  ])
+}
+
+// The splintered ends of the snapped spar, drawn over the feathers: the
+// coverts around the break have been torn away, so the bone shows.
+fn wing_break(r: Point, e: Point, w: Point, t: Point, side: Int) -> List(Path) {
+  let at = break_point(side, e, w)
+  let m = fn(s: Shape) { wing_motion(s, side, 1) }
+  let k = fn(s: Shape) { limp(s, side, 1, at, 1) }
+  let before = case side == 1 {
+    True -> along(r, e, 1, 2)
+    False -> e
+  }
+  let after = case side == 1 {
+    True -> w
+    False -> along(w, t, 1, 2)
+  }
+  list.flatten([
+    splinters(before, along(before, at, 9, 10), m, 0, 48),
+    splinters(after, along(at, after, 1, 8), k, 1, 50),
+  ])
+}
+
+// A point near the broken end of a bone that runs from \`from\` to \`end\`:
+// \`ahead\` past the end along the bone, \`over\` to one side of it.
+fn past(from: Point, end: Point, ahead: Int, over: Int) -> Point {
+  let dx = end.x - from.x
+  let dy = end.y - from.y
+  let n = sqrt(dx * dx + dy * dy) + 1
+  Point(end.x + { dx * ahead - dy * over } / n, end.y + { dy * ahead + dx * over } / n)
+}
+
+// Jagged shards of bone sticking out of a broken end.
+fn splinters(from: Point, end: Point, move, flip: Int, t: Int) -> List(Path) {
+  let f = 1 - flip * 2
+  let back = past(from, end, 0 - 12, 0)
+  let shards = [
+    Line(past(from, end, 0 - 10, 5 * f), past(from, end, 24, 10 * f)),
+    Line(back, past(from, end, 32, 0 - 1 * f)),
+    Line(past(from, end, 0 - 10, 0 - 5 * f), past(from, end, 16, 0 - 11 * f)),
   ]
+  list.flatten([
+    list.map(shards, fn(s: Shape) { Path(move(bone_dark(s)), t, t + 4, 11) }),
+    list.map(shards, fn(s: Shape) { Path(move(bone_main(s)), t + 1, t + 5, 6) }),
+    list.map(shards, fn(s: Shape) { Path(move(bone_light(s)), t + 2, t + 6, 2) }),
+  ])
 }
 
 // \u2500\u2500 The figure \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
@@ -1930,7 +2011,7 @@ fn wing_edge(r: Point, e: Point, w: Point, t: Point, side: Int) -> List(Path) {
 // go down first and the body tone over them, so the parts melt into one
 // silhouette with one outline around it. Then come the shadows on the side
 // away from the sun, the light on the side toward it, the creases where one
-// form passes in front of another, hatching, anatomy, and his curls.
+// form passes in front of another, hatching, anatomy, and his short hair.
 
 fn figure() -> List(Path) {
   list.flatten([
@@ -3214,11 +3295,11 @@ fn head_and_neck() -> List(Path) {
   ]
 }
 
-// A cap of tight curls over the crown and the back of his head: the ear,
-// jaw and nape stay bare.
+// Plain, close-cropped hair over the crown and the back of his head: the
+// ear, jaw and nape stay bare.
 fn hair() -> List(Path) {
   list.flatten([
-    [Path(falling(curl_base(Polygon([
+    [Path(falling(hair_base(Polygon([
         Point(282, -33), Point(279, -38), Point(276, -43), Point(273, -46),
         Point(269, -50), Point(265, -53), Point(261, -55), Point(256, -57),
         Point(252, -58), Point(247, -59), Point(242, -59), Point(237, -58),
@@ -3283,123 +3364,7 @@ fn hair() -> List(Path) {
         Point(261, -26), Point(262, -25), Point(263, -26), Point(266, -26),
         Point(268, -27), Point(272, -29), Point(275, -30), Point(276, -32),
       ])],
-    curl(Point(204, -6), 6, 42),
-    curl(Point(202, -14), 3, 42),
-    curl(Point(208, 2), 4, 42),
-    curl(Point(200, -22), 5, 42),
-    curl(Point(212, 10), 6, 42),
-    curl(Point(200, -31), 5, 42),
-    curl(Point(218, 16), 4, 42),
-    curl(Point(203, -38), 4, 42),
-    curl(Point(225, 21), 6, 42),
-    curl(Point(208, -45), 4, 42),
-    curl(Point(233, 22), 4, 43),
-    curl(Point(215, -50), 6, 43),
-    curl(Point(242, 21), 5, 43),
-    curl(Point(223, -54), 5, 43),
-    curl(Point(250, 20), 6, 43),
-    curl(Point(231, -56), 7, 43),
-    curl(Point(259, 17), 4, 43),
-    curl(Point(239, -58), 6, 43),
-    curl(Point(266, 14), 4, 43),
-    curl(Point(248, -57), 4, 43),
-    curl(Point(273, 9), 5, 44),
-    curl(Point(256, -56), 6, 44),
-    curl(Point(279, 2), 5, 44),
-    curl(Point(264, -52), 7, 44),
-    curl(Point(282, -6), 6, 44),
-    curl(Point(271, -47), 6, 44),
-    curl(Point(284, -14), 5, 44),
-    curl(Point(276, -40), 6, 44),
-    curl(Point(284, -23), 6, 44),
-    curl(Point(281, -33), 4, 44),
-    curl(Point(281, -31), 5, 45),
-    ringlet(Point(210, -14), 3, 295, 44),
-    ringlet(Point(215, -1), 3, 272, 44),
-    ringlet(Point(207, -23), 3, 55, 44),
-    ringlet(Point(218, 6), 4, 2, 44),
-    ringlet(Point(212, -10), 5, 115, 44),
-    ringlet(Point(206, -31), 3, 32, 44),
-    ringlet(Point(228, 15), 3, 114, 44),
-    ringlet(Point(219, -8), 4, 1, 44),
-    ringlet(Point(212, -28), 4, 53, 44),
-    ringlet(Point(216, -21), 5, 270, 44),
-    ringlet(Point(210, -37), 4, 291, 45),
-    ringlet(Point(226, 6), 3, 118, 45),
-    ringlet(Point(224, 0), 4, 109, 45),
-    ringlet(Point(219, -16), 5, 265, 45),
-    ringlet(Point(231, 2), 4, 226, 45),
-    ringlet(Point(229, -5), 4, 352, 45),
-    ringlet(Point(236, 15), 3, 283, 45),
-    ringlet(Point(218, -34), 3, 19, 45),
-    ringlet(Point(221, -27), 4, 280, 45),
-    ringlet(Point(234, 9), 4, 345, 45),
-    ringlet(Point(216, -43), 3, 216, 46),
-    ringlet(Point(227, -13), 5, 251, 46),
-    ringlet(Point(225, -20), 3, 91, 46),
-    ringlet(Point(220, -48), 5, 96, 46),
-    ringlet(Point(226, -34), 3, 266, 46),
-    ringlet(Point(224, -40), 5, 241, 46),
-    ringlet(Point(242, 10), 3, 20, 46),
-    ringlet(Point(232, -20), 4, 325, 46),
-    ringlet(Point(238, -4), 4, 74, 46),
-    ringlet(Point(230, -26), 3, 349, 46),
-    ringlet(Point(240, 1), 3, 68, 47),
-    ringlet(Point(235, -13), 4, 312, 47),
-    ringlet(Point(245, -3), 4, 1, 47),
-    ringlet(Point(230, -46), 4, 215, 47),
-    ringlet(Point(248, 3), 4, 234, 47),
-    ringlet(Point(240, -19), 5, 57, 47),
-    ringlet(Point(235, -32), 4, 46, 47),
-    ringlet(Point(243, -12), 4, 199, 47),
-    ringlet(Point(232, -41), 3, 157, 47),
-    ringlet(Point(238, -25), 4, 280, 47),
-    ringlet(Point(252, 11), 5, 208, 48),
-    ringlet(Point(242, -30), 3, 301, 48),
-    ringlet(Point(253, -1), 4, 199, 48),
-    ringlet(Point(249, -10), 3, 262, 48),
-    ringlet(Point(236, -46), 4, 129, 48),
-    ringlet(Point(256, 4), 4, 162, 48),
-    ringlet(Point(245, -25), 5, 359, 48),
-    ringlet(Point(249, -16), 4, 1, 48),
-    ringlet(Point(241, -38), 5, 168, 48),
-    ringlet(Point(255, -14), 4, 140, 48),
-    ringlet(Point(261, -1), 4, 277, 49),
-    ringlet(Point(245, -43), 3, 218, 49),
-    ringlet(Point(248, -37), 3, 325, 49),
-    ringlet(Point(254, -22), 5, 236, 49),
-    ringlet(Point(243, -52), 4, 313, 49),
-    ringlet(Point(251, -32), 3, 194, 49),
-    ringlet(Point(260, -9), 3, 240, 49),
-    ringlet(Point(265, 5), 3, 91, 49),
-    ringlet(Point(260, -21), 3, 107, 49),
-    ringlet(Point(270, 0), 4, 288, 49),
-    ringlet(Point(253, -45), 3, 273, 50),
-    ringlet(Point(251, -51), 3, 64, 50),
-    ringlet(Point(265, -15), 5, 19, 50),
-    ringlet(Point(260, -29), 3, 139, 50),
-    ringlet(Point(268, -8), 4, 64, 50),
-    ringlet(Point(257, -38), 4, 154, 50),
-    ringlet(Point(261, -41), 3, 49, 50),
-    ringlet(Point(263, -34), 5, 109, 50),
-    ringlet(Point(274, -7), 3, 334, 50),
-    ringlet(Point(258, -50), 3, 3, 50),
-    ringlet(Point(271, -14), 4, 198, 51),
-    ringlet(Point(267, -29), 3, 197, 51),
-    ringlet(Point(270, -22), 3, 1, 51),
-    ringlet(Point(271, -33), 3, 330, 51),
-    ringlet(Point(276, -20), 3, 104, 51),
-    ringlet(Point(268, -42), 4, 43, 51),
-    ringlet(Point(275, -26), 4, 146, 51),
   ])
-}
-
-fn curl(at: Point, r: Int, t: Int) -> List(Path) {
-  [Path(falling(curl_base(Circle(at, r))), t, t + 3, 0)]
-}
-
-fn ringlet(at: Point, r: Int, turn: Int, t: Int) -> List(Path) {
-  [Path(falling(curl_light(Arc(at, r, turn, turn + 230))), t, t + 4, 2)]
 }
 
 // \u2500\u2500 Torn feathers tumble away above him \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
@@ -3585,10 +3550,10 @@ fn speed_trails(i: Int) -> List(Path) {
 }
 `],["icarus_falling_charcoal",`// ICARUS \u2014 THE LAST FLIGHT, in charcoal
 // Deep black strokes on pale paper, under a black-and-white sun. He
-// tumbles backward and down with his bare back to us: curly head thrown
+// tumbles backward and down with his bare back to us: head thrown
 // back, one leg kicked up and bent, the other trailing, one arm reaching
-// up, the other hanging with fingers spread. Huge ragged wings spread
-// open from his shoulder blades, one on each side of his spine, over his
+// up, the other hanging with fingers spread. Huge broken wings
+// spread from his shoulder blades, one on each side of his spine, over his
 // back and the root of his kicked leg. Charcoal
 // drips run down beneath him.
 // Shape slider: 0 = tight wings, 100 = wings thrown wide open.
@@ -3645,16 +3610,8 @@ fn highlight(s: Shape) -> Shape {
   Faded(Colored(s, Rgb(252, 250, 244)), 55)
 }
 
-fn curl_base(s: Shape) -> Shape {
+fn hair_base(s: Shape) -> Shape {
   Filled(s, Rgb(30, 28, 26))
-}
-
-fn curl_light(s: Shape) -> Shape {
-  Faded(Colored(s, Rgb(230, 225, 214)), 55)
-}
-
-fn curl_dark(s: Shape) -> Shape {
-  Colored(s, Rgb(6, 6, 6))
 }
 
 fn bone_glow(s: Shape) -> Shape {
@@ -3927,7 +3884,11 @@ fn trailing_leg(s: Shape) -> Shape {
 // over his back and limbs. Rows of feathers overlap like roof tiles: long
 // dark flight feathers at the trailing edge, shorter and paler coverts up
 // to the gilded leading edge, and soft scapulars where each wing meets his
-// back. The right wing is ragged: it is missing flight feathers.
+// back. Both wings are broken. The upper one is snapped at the wrist: its
+// hand is wrenched the wrong way and flops loose on the break. The lower
+// one is snapped at the elbow: the forearm and hand hang crooked and swing
+// limp. Splintered bone shows at each break, flight feathers are missing
+// or snapped off short, and the loose ones stick out askew.
 
 // A direction on a wing: \`sweep\` degrees from straight out of his back
 // toward his feet. The two wings mirror each other across the spine.
@@ -3974,12 +3935,47 @@ fn elbow(side: Int, spread: Int) -> Point {
   reach(shoulder(side), side, 25 + opening(spread), span(side, 105))
 }
 
+// How far each break wrenches the bone beyond it: the lower wing is bent at
+// the elbow, the upper one at the wrist, both against the way a wing folds.
+fn elbow_snap(side: Int) -> Int {
+  case side == 1 {
+    True -> 0 - 60
+    False -> 0
+  }
+}
+
+fn wrist_snap(side: Int) -> Int {
+  case side == 1 {
+    True -> 95
+    False -> 0 - 80
+  }
+}
+
 fn wrist(side: Int, spread: Int) -> Point {
-  reach(elbow(side, spread), side, 35 + opening(spread), span(side, 95))
+  reach(elbow(side, spread), side, 35 + opening(spread) + elbow_snap(side), span(side, 95))
 }
 
 fn wingtip(side: Int, spread: Int) -> Point {
-  reach(wrist(side, spread), side, 50 + opening(spread), span(side, 80))
+  let bend = elbow_snap(side) + wrist_snap(side)
+  reach(wrist(side, spread), side, 50 + opening(spread) + bend, span(side, 80))
+}
+
+// Where each wing is broken.
+fn break_point(side: Int, e: Point, w: Point) -> Point {
+  case side == 1 {
+    True -> e
+    False -> w
+  }
+}
+
+// What lies beyond a break (hang 1) flops loose around it on its own quick
+// beat, on top of the beat of the whole wing.
+fn limp(s: Shape, side: Int, flex: Int, at: Point, hang: Int) -> Shape {
+  let period = case side == 1 {
+    True -> 13
+    False -> 10
+  }
+  wing_motion(Sway(s, at, hang * 11, period), side, flex)
 }
 
 // Drawn from the bottom layer up: flight feathers, the leading edge, then
@@ -3990,33 +3986,53 @@ fn wing(side: Int, spread: Int) -> List(Path) {
   let w = wrist(side, spread)
   let t = wingtip(side, spread)
   let o = opening(spread)
+  let at = break_point(side, e, w)
+  let fore = elbow_snap(side)
+  let hand = fore + wrist_snap(side)
+  let loose_fore = { side + 1 } / 2
+  let mid = along(r, e, 1, 4)
+  let reach_in = case side == 1 {
+    True -> along(r, e, 9, 10)
+    False -> w
+  }
   list.flatten([
-    feather_row(0, 11, w, t, 90 + o, 24 + o, 165, 245, 0, side, 16),
-    feather_row(0, 10, e, w, 104, 84, 172, 198, 1, side, 20),
-    feather_row(0, 5, along(r, e, 1, 4), along(r, e, 7, 8), 100, 95, 128, 170, 2, side, 24),
+    feather_row(0, 11, w, t, 90 + o, 24 + o, 165, 245, 0, side, 16, hand, at, 1),
+    feather_row(0, 10, e, w, 104, 84, 172, 198, 1, side, 20, fore, at, loose_fore),
+    feather_row(0, 5, mid, along(r, e, 7, 8), 100, 95, 128, 170, 2, side, 24, 0, at, 0),
     wing_edge(r, e, w, t, side),
-    feather_row(0, 7, w, t, 86 + o, 38 + o, 100, 84, 3, side, 30),
-    feather_row(0, 10, e, w, 94, 88, 104, 96, 3, side, 30),
-    feather_row(0, 11, along(r, e, 1, 4), w, 98, 88, 70, 62, 4, side, 36),
-    feather_row(0, 5, w, t, 82 + o, 46 + o, 38, 30, 5, side, 40),
-    feather_row(0, 10, r, w, 98, 88, 40, 36, 5, side, 40),
-    feather_row(0, 5, r, along(r, e, 1, 2), 122, 104, 62, 74, 6, side, 46),
+    feather_row(0, 7, w, t, 86 + o, 38 + o, 100, 84, 3, side, 30, hand, at, 1),
+    feather_row(0, 10, e, w, 94, 88, 104, 96, 3, side, 30, fore, at, loose_fore),
+    feather_row(0, 11, mid, reach_in, 98, 88, 70, 62, 4, side, 36, 0, at, 0),
+    feather_row(0, 5, w, t, 82 + o, 46 + o, 38, 30, 5, side, 40, hand, at, 1),
+    feather_row(0, 10, r, reach_in, 98, 88, 40, 36, 5, side, 40, 0, at, 0),
+    feather_row(0, 5, r, along(r, e, 1, 2), 122, 104, 62, 74, 6, side, 46, 0, at, 0),
+    wing_break(r, e, w, t, side),
   ])
 }
 
 // One row of feathers rooted along the line from \`a\` to \`b\`. Their sweep
-// runs from \`s0\` to \`s1\` and their length from \`l0\` to \`l1\`.
-fn feather_row(i: Int, n: Int, a: Point, b: Point, s0: Int, s1: Int, l0: Int, l1: Int, kind: Int, side: Int, t: Int) -> List(Path) {
+// runs from \`s0\` to \`s1\` and their length from \`l0\` to \`l1\`, all bent
+// a further \`bend\` degrees by the breaks. Beyond a break (hang 1) the long
+// feathers stick out askew, and some are snapped off short.
+fn feather_row(i: Int, n: Int, a: Point, b: Point, s0: Int, s1: Int, l0: Int, l1: Int, kind: Int, side: Int, t: Int, bend: Int, at: Point, hang: Int) -> List(Path) {
   case i == n {
     True -> []
     False -> {
       let base = along(a, b, i, n - 1)
-      let sweep = s0 + { s1 - s0 } * i / { n - 1 }
-      let length = span(side, l0 + { l1 - l0 } * i / { n - 1 })
+      let askew = case kind < 3 {
+        True -> { i * 37 % 5 - 2 } * 8 * hang
+        False -> 0
+      }
+      let sweep = s0 + { s1 - s0 } * i / { n - 1 } + bend + askew
+      let full = span(side, l0 + { l1 - l0 } * i / { n - 1 })
+      let length = case kind < 2 && i % 4 == 1 {
+        True -> full * 11 / 20
+        False -> full
+      }
       let tip = reach(base, side, sweep, length)
       list.append(
-        feather(kind, base, tip, i, side, t + i),
-        feather_row(i + 1, n, a, b, s0, s1, l0, l1, kind, side, t),
+        feather(kind, base, tip, i, side, t + i, at, hang),
+        feather_row(i + 1, n, a, b, s0, s1, l0, l1, kind, side, t, bend, at, hang),
       )
     }
   }
@@ -4024,15 +4040,15 @@ fn feather_row(i: Int, n: Int, a: Point, b: Point, s0: Int, s1: Int, l0: Int, l1
 
 // Kinds: 0 primaries, 1 secondaries, 2 tertials (long flight feathers);
 // 3 greater, 4 median and 5 lesser coverts; 6 scapulars.
-fn feather(kind: Int, base: Point, tip: Point, i: Int, side: Int, t: Int) -> List(Path) {
+fn feather(kind: Int, base: Point, tip: Point, i: Int, side: Int, t: Int, at: Point, hang: Int) -> List(Path) {
   case kind < 3 {
-    True -> flight_feather(kind, base, tip, i, side, t)
-    False -> covert(kind, base, tip, i, side, t)
+    True -> flight_feather(kind, base, tip, i, side, t, at, hang)
+    False -> covert(kind, base, tip, i, side, t, at, hang)
   }
 }
 
-fn flight_feather(kind: Int, base: Point, tip: Point, i: Int, side: Int, t: Int) -> List(Path) {
-  let torn = side == 1 && kind == 0 && { i == 3 || i == 7 }
+fn flight_feather(kind: Int, base: Point, tip: Point, i: Int, side: Int, t: Int, at: Point, hang: Int) -> List(Path) {
+  let torn = { kind < 2 && i % 4 == 3 } || { kind == 0 && i == 6 + side } || near(base, at, 30)
   case torn {
     True -> []
     False -> {
@@ -4040,7 +4056,7 @@ fn flight_feather(kind: Int, base: Point, tip: Point, i: Int, side: Int, t: Int)
         True -> 2
         False -> 1
       }
-      let m = fn(s: Shape) { wing_motion(s, side, flex) }
+      let m = fn(s: Shape) { limp(s, side, flex, at, hang) }
       let tone = case kind {
         0 -> i % 2 * 4
         1 -> 1 + i % 2
@@ -4070,8 +4086,8 @@ fn flight_feather(kind: Int, base: Point, tip: Point, i: Int, side: Int, t: Int)
   }
 }
 
-fn covert(kind: Int, base: Point, tip: Point, i: Int, side: Int, t: Int) -> List(Path) {
-  let m = fn(s: Shape) { wing_motion(s, side, 1) }
+fn covert(kind: Int, base: Point, tip: Point, i: Int, side: Int, t: Int, at: Point, hang: Int) -> List(Path) {
+  let m = fn(s: Shape) { limp(s, side, 1, at, hang) }
   let tone = case kind {
     3 -> 2 - i % 2
     4 -> i % 2
@@ -4085,17 +4101,25 @@ fn covert(kind: Int, base: Point, tip: Point, i: Int, side: Int, t: Int) -> List
     _ -> 15
   }
   let f = scale(base, tip, width)
-  let body = [
-    Path(m(covert_fill(f, tone)), t, t + 6, 0),
-    Path(m(covert_ink(f)), t + 1, t + 7, 1),
-  ]
-  case kind == 6 {
+  let body = case near(base, at, 34) {
+    True -> []
+    False -> [
+      Path(m(covert_fill(f, tone)), t, t + 6, 0),
+      Path(m(covert_ink(f)), t + 1, t + 7, 1),
+    ]
+  }
+  case kind == 6 && body != [] {
     True -> {
       let shade = Leaf(Point(base.x - 5, base.y + 8), Point(tip.x - 5, tip.y + 8), width)
       [Path(m(wing_shadow(shade)), t, t + 5, 0), ..body]
     }
     False -> body
   }
+}
+
+// Whether \`p\` lies within \`d\` of \`q\`.
+fn near(p: Point, q: Point, d: Int) -> Bool {
+  { p.x - q.x } * { p.x - q.x } + { p.y - q.y } * { p.y - q.y } < d * d
 }
 
 // A covert: narrow where it is rooted, broad and rounded at its free end.
@@ -4125,22 +4149,88 @@ fn scale(base: Point, tip: Point, width: Int) -> Shape {
   ])
 }
 
-// The gilded spar along the leading edge, in two smooth bends.
+// The gilded spar along the leading edge, snapped in two at the break: the
+// piece still on his back, and the piece beyond, each ending in splinters.
+// The bone runs from \`before\` into the break, and out of it toward \`after\`.
 fn wing_edge(r: Point, e: Point, w: Point, t: Point, side: Int) -> List(Path) {
+  let at = break_point(side, e, w)
   let m = fn(s: Shape) { wing_motion(s, side, 1) }
-  let joint = along(e, w, 1, 2)
-  let inner = Curve(r, e, joint)
-  let outer = Curve(joint, w, t)
-  [
-    Path(m(bone_glow(inner)), 12, 30, 18),
-    Path(m(bone_glow(outer)), 14, 34, 14),
-    Path(m(bone_dark(inner)), 13, 32, 15),
-    Path(m(bone_dark(outer)), 15, 35, 12),
-    Path(m(bone_main(inner)), 14, 33, 8),
-    Path(m(bone_main(outer)), 16, 36, 6),
-    Path(m(bone_light(inner)), 15, 34, 2),
-    Path(m(bone_light(outer)), 17, 36, 2),
+  let k = fn(s: Shape) { limp(s, side, 1, at, 1) }
+  let before = case side == 1 {
+    True -> along(r, e, 1, 2)
+    False -> e
+  }
+  let after = case side == 1 {
+    True -> w
+    False -> along(w, t, 1, 2)
+  }
+  let end_in = along(before, at, 9, 10)
+  let end_out = along(at, after, 1, 8)
+  let inner = case side == 1 {
+    True -> Line(r, end_in)
+    False -> Curve(r, e, end_in)
+  }
+  let outer = case side == 1 {
+    True -> Curve(end_out, w, t)
+    False -> Line(end_out, t)
+  }
+  list.flatten([
+    [
+      Path(m(bone_glow(inner)), 12, 30, 18),
+      Path(k(bone_glow(outer)), 14, 34, 14),
+      Path(m(bone_dark(inner)), 13, 32, 15),
+      Path(k(bone_dark(outer)), 15, 35, 12),
+      Path(m(bone_main(inner)), 14, 33, 8),
+      Path(k(bone_main(outer)), 16, 36, 6),
+      Path(m(bone_light(inner)), 15, 34, 2),
+      Path(k(bone_light(outer)), 17, 36, 2),
+    ],
+  ])
+}
+
+// The splintered ends of the snapped spar, drawn over the feathers: the
+// coverts around the break have been torn away, so the bone shows.
+fn wing_break(r: Point, e: Point, w: Point, t: Point, side: Int) -> List(Path) {
+  let at = break_point(side, e, w)
+  let m = fn(s: Shape) { wing_motion(s, side, 1) }
+  let k = fn(s: Shape) { limp(s, side, 1, at, 1) }
+  let before = case side == 1 {
+    True -> along(r, e, 1, 2)
+    False -> e
+  }
+  let after = case side == 1 {
+    True -> w
+    False -> along(w, t, 1, 2)
+  }
+  list.flatten([
+    splinters(before, along(before, at, 9, 10), m, 0, 48),
+    splinters(after, along(at, after, 1, 8), k, 1, 50),
+  ])
+}
+
+// A point near the broken end of a bone that runs from \`from\` to \`end\`:
+// \`ahead\` past the end along the bone, \`over\` to one side of it.
+fn past(from: Point, end: Point, ahead: Int, over: Int) -> Point {
+  let dx = end.x - from.x
+  let dy = end.y - from.y
+  let n = sqrt(dx * dx + dy * dy) + 1
+  Point(end.x + { dx * ahead - dy * over } / n, end.y + { dy * ahead + dx * over } / n)
+}
+
+// Jagged shards of bone sticking out of a broken end.
+fn splinters(from: Point, end: Point, move, flip: Int, t: Int) -> List(Path) {
+  let f = 1 - flip * 2
+  let back = past(from, end, 0 - 12, 0)
+  let shards = [
+    Line(past(from, end, 0 - 10, 5 * f), past(from, end, 24, 10 * f)),
+    Line(back, past(from, end, 32, 0 - 1 * f)),
+    Line(past(from, end, 0 - 10, 0 - 5 * f), past(from, end, 16, 0 - 11 * f)),
   ]
+  list.flatten([
+    list.map(shards, fn(s: Shape) { Path(move(bone_dark(s)), t, t + 4, 11) }),
+    list.map(shards, fn(s: Shape) { Path(move(bone_main(s)), t + 1, t + 5, 6) }),
+    list.map(shards, fn(s: Shape) { Path(move(bone_light(s)), t + 2, t + 6, 2) }),
+  ])
 }
 
 // \u2500\u2500 The figure \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
@@ -4150,7 +4240,7 @@ fn wing_edge(r: Point, e: Point, w: Point, t: Point, side: Int) -> List(Path) {
 // go down first and the body tone over them, so the parts melt into one
 // silhouette with one outline around it. Then come the shadows on the side
 // away from the sun, the light on the side toward it, the creases where one
-// form passes in front of another, hatching, anatomy, and his curls.
+// form passes in front of another, hatching, anatomy, and his short hair.
 
 fn figure() -> List(Path) {
   list.flatten([
@@ -5434,11 +5524,11 @@ fn head_and_neck() -> List(Path) {
   ]
 }
 
-// A cap of tight curls over the crown and the back of his head: the ear,
-// jaw and nape stay bare.
+// Plain, close-cropped hair over the crown and the back of his head: the
+// ear, jaw and nape stay bare.
 fn hair() -> List(Path) {
   list.flatten([
-    [Path(falling(curl_base(Polygon([
+    [Path(falling(hair_base(Polygon([
         Point(282, -33), Point(279, -38), Point(276, -43), Point(273, -46),
         Point(269, -50), Point(265, -53), Point(261, -55), Point(256, -57),
         Point(252, -58), Point(247, -59), Point(242, -59), Point(237, -58),
@@ -5503,123 +5593,7 @@ fn hair() -> List(Path) {
         Point(261, -26), Point(262, -25), Point(263, -26), Point(266, -26),
         Point(268, -27), Point(272, -29), Point(275, -30), Point(276, -32),
       ])],
-    curl(Point(204, -6), 6, 42),
-    curl(Point(202, -14), 3, 42),
-    curl(Point(208, 2), 4, 42),
-    curl(Point(200, -22), 5, 42),
-    curl(Point(212, 10), 6, 42),
-    curl(Point(200, -31), 5, 42),
-    curl(Point(218, 16), 4, 42),
-    curl(Point(203, -38), 4, 42),
-    curl(Point(225, 21), 6, 42),
-    curl(Point(208, -45), 4, 42),
-    curl(Point(233, 22), 4, 43),
-    curl(Point(215, -50), 6, 43),
-    curl(Point(242, 21), 5, 43),
-    curl(Point(223, -54), 5, 43),
-    curl(Point(250, 20), 6, 43),
-    curl(Point(231, -56), 7, 43),
-    curl(Point(259, 17), 4, 43),
-    curl(Point(239, -58), 6, 43),
-    curl(Point(266, 14), 4, 43),
-    curl(Point(248, -57), 4, 43),
-    curl(Point(273, 9), 5, 44),
-    curl(Point(256, -56), 6, 44),
-    curl(Point(279, 2), 5, 44),
-    curl(Point(264, -52), 7, 44),
-    curl(Point(282, -6), 6, 44),
-    curl(Point(271, -47), 6, 44),
-    curl(Point(284, -14), 5, 44),
-    curl(Point(276, -40), 6, 44),
-    curl(Point(284, -23), 6, 44),
-    curl(Point(281, -33), 4, 44),
-    curl(Point(281, -31), 5, 45),
-    ringlet(Point(210, -14), 3, 295, 44),
-    ringlet(Point(215, -1), 3, 272, 44),
-    ringlet(Point(207, -23), 3, 55, 44),
-    ringlet(Point(218, 6), 4, 2, 44),
-    ringlet(Point(212, -10), 5, 115, 44),
-    ringlet(Point(206, -31), 3, 32, 44),
-    ringlet(Point(228, 15), 3, 114, 44),
-    ringlet(Point(219, -8), 4, 1, 44),
-    ringlet(Point(212, -28), 4, 53, 44),
-    ringlet(Point(216, -21), 5, 270, 44),
-    ringlet(Point(210, -37), 4, 291, 45),
-    ringlet(Point(226, 6), 3, 118, 45),
-    ringlet(Point(224, 0), 4, 109, 45),
-    ringlet(Point(219, -16), 5, 265, 45),
-    ringlet(Point(231, 2), 4, 226, 45),
-    ringlet(Point(229, -5), 4, 352, 45),
-    ringlet(Point(236, 15), 3, 283, 45),
-    ringlet(Point(218, -34), 3, 19, 45),
-    ringlet(Point(221, -27), 4, 280, 45),
-    ringlet(Point(234, 9), 4, 345, 45),
-    ringlet(Point(216, -43), 3, 216, 46),
-    ringlet(Point(227, -13), 5, 251, 46),
-    ringlet(Point(225, -20), 3, 91, 46),
-    ringlet(Point(220, -48), 5, 96, 46),
-    ringlet(Point(226, -34), 3, 266, 46),
-    ringlet(Point(224, -40), 5, 241, 46),
-    ringlet(Point(242, 10), 3, 20, 46),
-    ringlet(Point(232, -20), 4, 325, 46),
-    ringlet(Point(238, -4), 4, 74, 46),
-    ringlet(Point(230, -26), 3, 349, 46),
-    ringlet(Point(240, 1), 3, 68, 47),
-    ringlet(Point(235, -13), 4, 312, 47),
-    ringlet(Point(245, -3), 4, 1, 47),
-    ringlet(Point(230, -46), 4, 215, 47),
-    ringlet(Point(248, 3), 4, 234, 47),
-    ringlet(Point(240, -19), 5, 57, 47),
-    ringlet(Point(235, -32), 4, 46, 47),
-    ringlet(Point(243, -12), 4, 199, 47),
-    ringlet(Point(232, -41), 3, 157, 47),
-    ringlet(Point(238, -25), 4, 280, 47),
-    ringlet(Point(252, 11), 5, 208, 48),
-    ringlet(Point(242, -30), 3, 301, 48),
-    ringlet(Point(253, -1), 4, 199, 48),
-    ringlet(Point(249, -10), 3, 262, 48),
-    ringlet(Point(236, -46), 4, 129, 48),
-    ringlet(Point(256, 4), 4, 162, 48),
-    ringlet(Point(245, -25), 5, 359, 48),
-    ringlet(Point(249, -16), 4, 1, 48),
-    ringlet(Point(241, -38), 5, 168, 48),
-    ringlet(Point(255, -14), 4, 140, 48),
-    ringlet(Point(261, -1), 4, 277, 49),
-    ringlet(Point(245, -43), 3, 218, 49),
-    ringlet(Point(248, -37), 3, 325, 49),
-    ringlet(Point(254, -22), 5, 236, 49),
-    ringlet(Point(243, -52), 4, 313, 49),
-    ringlet(Point(251, -32), 3, 194, 49),
-    ringlet(Point(260, -9), 3, 240, 49),
-    ringlet(Point(265, 5), 3, 91, 49),
-    ringlet(Point(260, -21), 3, 107, 49),
-    ringlet(Point(270, 0), 4, 288, 49),
-    ringlet(Point(253, -45), 3, 273, 50),
-    ringlet(Point(251, -51), 3, 64, 50),
-    ringlet(Point(265, -15), 5, 19, 50),
-    ringlet(Point(260, -29), 3, 139, 50),
-    ringlet(Point(268, -8), 4, 64, 50),
-    ringlet(Point(257, -38), 4, 154, 50),
-    ringlet(Point(261, -41), 3, 49, 50),
-    ringlet(Point(263, -34), 5, 109, 50),
-    ringlet(Point(274, -7), 3, 334, 50),
-    ringlet(Point(258, -50), 3, 3, 50),
-    ringlet(Point(271, -14), 4, 198, 51),
-    ringlet(Point(267, -29), 3, 197, 51),
-    ringlet(Point(270, -22), 3, 1, 51),
-    ringlet(Point(271, -33), 3, 330, 51),
-    ringlet(Point(276, -20), 3, 104, 51),
-    ringlet(Point(268, -42), 4, 43, 51),
-    ringlet(Point(275, -26), 4, 146, 51),
   ])
-}
-
-fn curl(at: Point, r: Int, t: Int) -> List(Path) {
-  [Path(falling(curl_base(Circle(at, r))), t, t + 3, 0)]
-}
-
-fn ringlet(at: Point, r: Int, turn: Int, t: Int) -> List(Path) {
-  [Path(falling(curl_light(Arc(at, r, turn, turn + 230))), t, t + 4, 2)]
 }
 
 // \u2500\u2500 Torn feathers tumble away above him \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
