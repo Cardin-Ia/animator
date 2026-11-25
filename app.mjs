@@ -791,7 +791,7 @@ fn body() -> List(Path) {
     bones(flesh),
     bones(shading),
     back(16),
-    hair(),
+    head_detail(),
   ])
 }
 
@@ -887,15 +887,20 @@ fn hatch(k: Int, a: Point, b: Point, w: Int, t: Int) -> List(Path) {
   }
 }
 
+// His shaved head: a shine on the bare scalp, and a square jaw shadowed with
+// stubble where it meets the neck.
+fn head_detail() -> List(Path) {
+  [
+    Path(tumble(light(Leaf(Point(-218, 196), Point(-196, 216), 5))), 15, 18, 0),
+    Path(tumble(soft(Arc(Point(-190, 188), 31, 300, 395))), 15, 19, 7),
+    Path(tumble(hatching(Line(Point(-161, 179), Point(-169, 166)))), 16, 18, 2),
+    Path(tumble(hatching(Line(Point(-166, 166), Point(-176, 157)))), 16, 18, 2),
+  ]
+}
+
 // The line of the spine down his back.
 fn back(t: Int) -> List(Path) {
   [Path(tumble(soft(Curve(Point(-139, 140), Point(-72, 52), Point(19, -12)))), t, t + 6, 3)]
-}
-
-// Plain, close-cropped hair on the crown of his head. He falls headfirst,
-// so the crown points down and to the left; his face and neck stay bare.
-fn hair() -> List(Path) {
-  [Path(tumble(hair_tone(Arc(Point(-190, 188), 31, 70, 215))), 14, 19, 14)]
 }
 
 // A wing: a bone from shoulder to wrist to tip, with long feathers fanning
@@ -1029,10 +1034,6 @@ fn light(shape: Shape) -> Shape {
   Faded(Filled(shape, Rgb(240, 232, 216)), 40)
 }
 
-fn hair_tone(shape: Shape) -> Shape {
-  Faded(Colored(shape, Rgb(22, 19, 16)), 72)
-}
-
 fn feather_fill(shape: Shape) -> Shape {
   Faded(Filled(shape, Rgb(32, 27, 22)), 14)
 }
@@ -1161,7 +1162,7 @@ fn body() -> List(Path) {
     bones(flesh),
     bones(shading),
     back(16),
-    hair(),
+    head_detail(),
   ])
 }
 
@@ -1257,15 +1258,20 @@ fn hatch(k: Int, a: Point, b: Point, w: Int, t: Int) -> List(Path) {
   }
 }
 
+// His shaved head: a shine on the bare scalp, and a square jaw shadowed with
+// stubble where it meets the neck.
+fn head_detail() -> List(Path) {
+  [
+    Path(tumble(light(Leaf(Point(-218, 196), Point(-196, 216), 5))), 15, 18, 0),
+    Path(tumble(soft(Arc(Point(-190, 188), 31, 300, 395))), 15, 19, 7),
+    Path(tumble(hatching(Line(Point(-161, 179), Point(-169, 166)))), 16, 18, 2),
+    Path(tumble(hatching(Line(Point(-166, 166), Point(-176, 157)))), 16, 18, 2),
+  ]
+}
+
 // The line of the spine down his back.
 fn back(t: Int) -> List(Path) {
   [Path(tumble(soft(Curve(Point(-139, 140), Point(-72, 52), Point(19, -12)))), t, t + 6, 3)]
-}
-
-// Plain, close-cropped hair on the crown of his head. He falls headfirst,
-// so the crown points down and to the left; his face and neck stay bare.
-fn hair() -> List(Path) {
-  [Path(tumble(hair_tone(Arc(Point(-190, 188), 31, 70, 215))), 14, 19, 14)]
 }
 
 // A wing: a bone from shoulder to wrist to tip, with long feathers fanning
@@ -1399,10 +1405,6 @@ fn light(shape: Shape) -> Shape {
   Glow(Faded(Filled(shape, Rgb(235, 240, 255)), 45), 16)
 }
 
-fn hair_tone(shape: Shape) -> Shape {
-  Glow(Faded(Colored(shape, Rgb(242, 246, 255)), 42), 8)
-}
-
 fn feather_fill(shape: Shape) -> Shape {
   Glow(Faded(Filled(shape, Rgb(235, 240, 255)), 14), 20)
 }
@@ -1531,10 +1533,6 @@ fn line(s: Shape) -> Shape {
 
 fn highlight(s: Shape) -> Shape {
   Faded(Colored(s, Rgb(255, 201, 136)), 60)
-}
-
-fn hair_base(s: Shape) -> Shape {
-  Filled(s, Rgb(28, 30, 42))
 }
 
 fn bone_glow(s: Shape) -> Shape {
@@ -2011,7 +2009,7 @@ fn splinters(from: Point, end: Point, move, flip: Int, t: Int) -> List(Path) {
 // go down first and the body tone over them, so the parts melt into one
 // silhouette with one outline around it. Then come the shadows on the side
 // away from the sun, the light on the side toward it, the creases where one
-// form passes in front of another, hatching, anatomy, and his short hair.
+// form passes in front of another, hatching, and anatomy.
 
 fn figure() -> List(Path) {
   list.flatten([
@@ -2026,7 +2024,6 @@ fn figure() -> List(Path) {
     limb_anatomy(),
     hands_and_feet(),
     head_and_neck(),
-    hair(),
   ])
 }
 
@@ -3237,7 +3234,8 @@ fn hands_and_feet() -> List(Path) {
   ]
 }
 
-// His right ear and jaw as he turns his head, the nape and neck muscles.
+// His right ear and stubbled jaw as he turns his shaved head, a shine on the
+// bare scalp, the nape and neck muscles.
 fn head_and_neck() -> List(Path) {
   [
     Path(falling(skin(Polygon([
@@ -3261,6 +3259,30 @@ fn head_and_neck() -> List(Path) {
       Point(232, 39), Point(232, 37), Point(236, 35), Point(239, 34), Point(244, 33),
     ]),
     mark(falling, 37, 2, Point(219, 39), Point(208, 46), Point(197, 44)),
+    dark(falling, 38, [
+      Point(257, 30), Point(256, 38), Point(251, 45), Point(243, 50), Point(232, 53),
+      Point(220, 53), Point(208, 51), Point(197, 47), Point(203, 41), Point(214, 39),
+      Point(226, 41), Point(237, 40), Point(246, 36), Point(252, 30),
+    ]),
+    dark(falling, 38, [
+      Point(257, 30), Point(256, 38), Point(251, 45), Point(243, 50), Point(232, 53),
+      Point(220, 53), Point(208, 51), Point(197, 47), Point(203, 41), Point(214, 39),
+      Point(226, 41), Point(237, 40), Point(246, 36), Point(252, 30),
+    ]),
+    hatch(falling, 39, Point(205, 46), Point(209, 50)),
+    hatch(falling, 39, Point(214, 46), Point(217, 51)),
+    hatch(falling, 39, Point(223, 47), Point(225, 52)),
+    hatch(falling, 39, Point(232, 47), Point(233, 51)),
+    hatch(falling, 39, Point(241, 44), Point(243, 48)),
+    hatch(falling, 39, Point(249, 39), Point(252, 42)),
+    lit(falling, 41, [
+      Point(262, -50), Point(272, -43), Point(279, -33), Point(283, -22), Point(283, -12),
+      Point(278, -18), Point(272, -29), Point(264, -39), Point(254, -46), Point(246, -50),
+    ]),
+    lit(falling, 41, [
+      Point(262, -50), Point(272, -43), Point(279, -33), Point(283, -22), Point(283, -12),
+      Point(278, -18), Point(272, -29), Point(264, -39), Point(254, -46), Point(246, -50),
+    ]),
     lit(falling, 36, [
       Point(218, 50), Point(221, 50), Point(226, 50), Point(230, 50), Point(235, 48),
       Point(238, 46), Point(242, 43), Point(245, 40), Point(247, 37), Point(244, 39),
@@ -3293,78 +3315,6 @@ fn head_and_neck() -> List(Path) {
       Point(180, 2),
     ]),
   ]
-}
-
-// Plain, close-cropped hair over the crown and the back of his head: the
-// ear, jaw and nape stay bare.
-fn hair() -> List(Path) {
-  list.flatten([
-    [Path(falling(hair_base(Polygon([
-        Point(282, -33), Point(279, -38), Point(276, -43), Point(273, -46),
-        Point(269, -50), Point(265, -53), Point(261, -55), Point(256, -57),
-        Point(252, -58), Point(247, -59), Point(242, -59), Point(237, -58),
-        Point(232, -58), Point(227, -57), Point(223, -55), Point(219, -54),
-        Point(215, -52), Point(212, -50), Point(209, -47), Point(206, -45),
-        Point(204, -42), Point(202, -40), Point(200, -37), Point(199, -34),
-        Point(199, -30), Point(198, -27), Point(198, -24), Point(199, -20),
-        Point(200, -17), Point(201, -13), Point(202, -9), Point(203, -6), Point(205, -2),
-        Point(206, 1), Point(208, 5), Point(210, 8), Point(211, 11), Point(213, 13),
-        Point(215, 15), Point(217, 17), Point(220, 19), Point(222, 21), Point(225, 22),
-        Point(227, 22), Point(230, 23), Point(233, 23), Point(236, 23), Point(239, 23),
-        Point(242, 22), Point(245, 22), Point(248, 21), Point(252, 20), Point(255, 20),
-        Point(258, 19), Point(261, 18), Point(264, 16), Point(267, 14), Point(270, 12),
-        Point(273, 10), Point(276, 7), Point(278, 4), Point(281, 1), Point(283, -3),
-        Point(284, -8), Point(285, -12), Point(285, -18), Point(285, -23), Point(284, -28),
-      ]))), 40, 44, 0)],
-    [lit(falling, 41, [
-        Point(277, -33), Point(276, -34), Point(275, -35), Point(275, -36),
-        Point(274, -37), Point(273, -38), Point(273, -39), Point(272, -40),
-        Point(271, -41), Point(271, -42), Point(270, -43), Point(269, -44),
-        Point(268, -45), Point(267, -45), Point(267, -46), Point(266, -47),
-        Point(265, -48), Point(264, -48), Point(263, -49), Point(262, -49),
-        Point(261, -50), Point(260, -50), Point(259, -51), Point(258, -51),
-        Point(257, -52), Point(256, -52), Point(255, -53), Point(254, -53),
-        Point(253, -53), Point(252, -53), Point(251, -54), Point(250, -54),
-        Point(249, -54), Point(248, -54), Point(247, -54), Point(246, -54),
-        Point(245, -54), Point(244, -54), Point(243, -54), Point(241, -54),
-        Point(240, -54), Point(239, -54), Point(238, -54), Point(237, -54),
-        Point(236, -54), Point(235, -54), Point(234, -53), Point(232, -53),
-        Point(231, -53), Point(230, -53), Point(229, -52), Point(228, -52),
-        Point(227, -52), Point(226, -52), Point(225, -51), Point(224, -51),
-        Point(223, -50), Point(222, -50), Point(221, -50), Point(220, -49),
-        Point(219, -49), Point(219, -48), Point(218, -48), Point(217, -48),
-        Point(216, -47), Point(215, -47), Point(215, -46), Point(214, -46),
-        Point(213, -45), Point(212, -44), Point(211, -44), Point(211, -43),
-        Point(210, -43), Point(214, -40), Point(222, -35), Point(235, -28),
-        Point(252, -19), Point(265, -12), Point(274, -8), Point(279, -6), Point(279, -7),
-        Point(279, -8), Point(280, -9), Point(280, -10), Point(280, -11), Point(280, -12),
-        Point(280, -14), Point(280, -15), Point(281, -16), Point(281, -17),
-        Point(281, -18), Point(281, -20), Point(280, -21), Point(280, -22),
-        Point(280, -23), Point(280, -24), Point(280, -25), Point(279, -26),
-        Point(277, -26), Point(274, -26), Point(271, -25), Point(269, -24),
-        Point(267, -23), Point(267, -22), Point(268, -22), Point(269, -21),
-        Point(269, -20), Point(270, -20), Point(271, -19), Point(272, -18),
-        Point(272, -17), Point(273, -16), Point(274, -15), Point(274, -14),
-        Point(275, -13), Point(275, -12), Point(276, -11), Point(276, -10), Point(276, -9),
-        Point(277, -8), Point(277, -6), Point(273, -8), Point(265, -12), Point(253, -18),
-        Point(236, -27), Point(224, -33), Point(216, -38), Point(212, -40),
-        Point(213, -40), Point(214, -40), Point(215, -40), Point(216, -40),
-        Point(217, -40), Point(218, -40), Point(219, -40), Point(220, -40),
-        Point(221, -40), Point(222, -40), Point(223, -40), Point(224, -40),
-        Point(225, -40), Point(226, -40), Point(227, -40), Point(228, -40),
-        Point(229, -40), Point(230, -40), Point(231, -40), Point(232, -39),
-        Point(233, -39), Point(234, -39), Point(235, -39), Point(236, -39),
-        Point(237, -39), Point(238, -39), Point(239, -38), Point(240, -38),
-        Point(241, -38), Point(242, -37), Point(243, -37), Point(244, -37),
-        Point(245, -36), Point(246, -36), Point(247, -35), Point(248, -35),
-        Point(248, -34), Point(249, -34), Point(249, -33), Point(250, -33),
-        Point(251, -32), Point(252, -32), Point(253, -31), Point(254, -31),
-        Point(255, -30), Point(256, -30), Point(256, -29), Point(257, -29),
-        Point(258, -28), Point(259, -28), Point(259, -27), Point(260, -27),
-        Point(261, -26), Point(262, -25), Point(263, -26), Point(266, -26),
-        Point(268, -27), Point(272, -29), Point(275, -30), Point(276, -32),
-      ])],
-  ])
 }
 
 // \u2500\u2500 Torn feathers tumble away above him \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
@@ -3608,10 +3558,6 @@ fn line(s: Shape) -> Shape {
 
 fn highlight(s: Shape) -> Shape {
   Faded(Colored(s, Rgb(252, 250, 244)), 55)
-}
-
-fn hair_base(s: Shape) -> Shape {
-  Filled(s, Rgb(30, 28, 26))
 }
 
 fn bone_glow(s: Shape) -> Shape {
@@ -4240,7 +4186,7 @@ fn splinters(from: Point, end: Point, move, flip: Int, t: Int) -> List(Path) {
 // go down first and the body tone over them, so the parts melt into one
 // silhouette with one outline around it. Then come the shadows on the side
 // away from the sun, the light on the side toward it, the creases where one
-// form passes in front of another, hatching, anatomy, and his short hair.
+// form passes in front of another, hatching, and anatomy.
 
 fn figure() -> List(Path) {
   list.flatten([
@@ -4255,7 +4201,6 @@ fn figure() -> List(Path) {
     limb_anatomy(),
     hands_and_feet(),
     head_and_neck(),
-    hair(),
   ])
 }
 
@@ -5466,7 +5411,8 @@ fn hands_and_feet() -> List(Path) {
   ]
 }
 
-// His right ear and jaw as he turns his head, the nape and neck muscles.
+// His right ear and stubbled jaw as he turns his shaved head, a shine on the
+// bare scalp, the nape and neck muscles.
 fn head_and_neck() -> List(Path) {
   [
     Path(falling(skin(Polygon([
@@ -5490,6 +5436,30 @@ fn head_and_neck() -> List(Path) {
       Point(232, 39), Point(232, 37), Point(236, 35), Point(239, 34), Point(244, 33),
     ]),
     mark(falling, 37, 2, Point(219, 39), Point(208, 46), Point(197, 44)),
+    dark(falling, 38, [
+      Point(257, 30), Point(256, 38), Point(251, 45), Point(243, 50), Point(232, 53),
+      Point(220, 53), Point(208, 51), Point(197, 47), Point(203, 41), Point(214, 39),
+      Point(226, 41), Point(237, 40), Point(246, 36), Point(252, 30),
+    ]),
+    dark(falling, 38, [
+      Point(257, 30), Point(256, 38), Point(251, 45), Point(243, 50), Point(232, 53),
+      Point(220, 53), Point(208, 51), Point(197, 47), Point(203, 41), Point(214, 39),
+      Point(226, 41), Point(237, 40), Point(246, 36), Point(252, 30),
+    ]),
+    hatch(falling, 39, Point(205, 46), Point(209, 50)),
+    hatch(falling, 39, Point(214, 46), Point(217, 51)),
+    hatch(falling, 39, Point(223, 47), Point(225, 52)),
+    hatch(falling, 39, Point(232, 47), Point(233, 51)),
+    hatch(falling, 39, Point(241, 44), Point(243, 48)),
+    hatch(falling, 39, Point(249, 39), Point(252, 42)),
+    lit(falling, 41, [
+      Point(262, -50), Point(272, -43), Point(279, -33), Point(283, -22), Point(283, -12),
+      Point(278, -18), Point(272, -29), Point(264, -39), Point(254, -46), Point(246, -50),
+    ]),
+    lit(falling, 41, [
+      Point(262, -50), Point(272, -43), Point(279, -33), Point(283, -22), Point(283, -12),
+      Point(278, -18), Point(272, -29), Point(264, -39), Point(254, -46), Point(246, -50),
+    ]),
     lit(falling, 36, [
       Point(218, 50), Point(221, 50), Point(226, 50), Point(230, 50), Point(235, 48),
       Point(238, 46), Point(242, 43), Point(245, 40), Point(247, 37), Point(244, 39),
@@ -5522,78 +5492,6 @@ fn head_and_neck() -> List(Path) {
       Point(180, 2),
     ]),
   ]
-}
-
-// Plain, close-cropped hair over the crown and the back of his head: the
-// ear, jaw and nape stay bare.
-fn hair() -> List(Path) {
-  list.flatten([
-    [Path(falling(hair_base(Polygon([
-        Point(282, -33), Point(279, -38), Point(276, -43), Point(273, -46),
-        Point(269, -50), Point(265, -53), Point(261, -55), Point(256, -57),
-        Point(252, -58), Point(247, -59), Point(242, -59), Point(237, -58),
-        Point(232, -58), Point(227, -57), Point(223, -55), Point(219, -54),
-        Point(215, -52), Point(212, -50), Point(209, -47), Point(206, -45),
-        Point(204, -42), Point(202, -40), Point(200, -37), Point(199, -34),
-        Point(199, -30), Point(198, -27), Point(198, -24), Point(199, -20),
-        Point(200, -17), Point(201, -13), Point(202, -9), Point(203, -6), Point(205, -2),
-        Point(206, 1), Point(208, 5), Point(210, 8), Point(211, 11), Point(213, 13),
-        Point(215, 15), Point(217, 17), Point(220, 19), Point(222, 21), Point(225, 22),
-        Point(227, 22), Point(230, 23), Point(233, 23), Point(236, 23), Point(239, 23),
-        Point(242, 22), Point(245, 22), Point(248, 21), Point(252, 20), Point(255, 20),
-        Point(258, 19), Point(261, 18), Point(264, 16), Point(267, 14), Point(270, 12),
-        Point(273, 10), Point(276, 7), Point(278, 4), Point(281, 1), Point(283, -3),
-        Point(284, -8), Point(285, -12), Point(285, -18), Point(285, -23), Point(284, -28),
-      ]))), 40, 44, 0)],
-    [lit(falling, 41, [
-        Point(277, -33), Point(276, -34), Point(275, -35), Point(275, -36),
-        Point(274, -37), Point(273, -38), Point(273, -39), Point(272, -40),
-        Point(271, -41), Point(271, -42), Point(270, -43), Point(269, -44),
-        Point(268, -45), Point(267, -45), Point(267, -46), Point(266, -47),
-        Point(265, -48), Point(264, -48), Point(263, -49), Point(262, -49),
-        Point(261, -50), Point(260, -50), Point(259, -51), Point(258, -51),
-        Point(257, -52), Point(256, -52), Point(255, -53), Point(254, -53),
-        Point(253, -53), Point(252, -53), Point(251, -54), Point(250, -54),
-        Point(249, -54), Point(248, -54), Point(247, -54), Point(246, -54),
-        Point(245, -54), Point(244, -54), Point(243, -54), Point(241, -54),
-        Point(240, -54), Point(239, -54), Point(238, -54), Point(237, -54),
-        Point(236, -54), Point(235, -54), Point(234, -53), Point(232, -53),
-        Point(231, -53), Point(230, -53), Point(229, -52), Point(228, -52),
-        Point(227, -52), Point(226, -52), Point(225, -51), Point(224, -51),
-        Point(223, -50), Point(222, -50), Point(221, -50), Point(220, -49),
-        Point(219, -49), Point(219, -48), Point(218, -48), Point(217, -48),
-        Point(216, -47), Point(215, -47), Point(215, -46), Point(214, -46),
-        Point(213, -45), Point(212, -44), Point(211, -44), Point(211, -43),
-        Point(210, -43), Point(214, -40), Point(222, -35), Point(235, -28),
-        Point(252, -19), Point(265, -12), Point(274, -8), Point(279, -6), Point(279, -7),
-        Point(279, -8), Point(280, -9), Point(280, -10), Point(280, -11), Point(280, -12),
-        Point(280, -14), Point(280, -15), Point(281, -16), Point(281, -17),
-        Point(281, -18), Point(281, -20), Point(280, -21), Point(280, -22),
-        Point(280, -23), Point(280, -24), Point(280, -25), Point(279, -26),
-        Point(277, -26), Point(274, -26), Point(271, -25), Point(269, -24),
-        Point(267, -23), Point(267, -22), Point(268, -22), Point(269, -21),
-        Point(269, -20), Point(270, -20), Point(271, -19), Point(272, -18),
-        Point(272, -17), Point(273, -16), Point(274, -15), Point(274, -14),
-        Point(275, -13), Point(275, -12), Point(276, -11), Point(276, -10), Point(276, -9),
-        Point(277, -8), Point(277, -6), Point(273, -8), Point(265, -12), Point(253, -18),
-        Point(236, -27), Point(224, -33), Point(216, -38), Point(212, -40),
-        Point(213, -40), Point(214, -40), Point(215, -40), Point(216, -40),
-        Point(217, -40), Point(218, -40), Point(219, -40), Point(220, -40),
-        Point(221, -40), Point(222, -40), Point(223, -40), Point(224, -40),
-        Point(225, -40), Point(226, -40), Point(227, -40), Point(228, -40),
-        Point(229, -40), Point(230, -40), Point(231, -40), Point(232, -39),
-        Point(233, -39), Point(234, -39), Point(235, -39), Point(236, -39),
-        Point(237, -39), Point(238, -39), Point(239, -38), Point(240, -38),
-        Point(241, -38), Point(242, -37), Point(243, -37), Point(244, -37),
-        Point(245, -36), Point(246, -36), Point(247, -35), Point(248, -35),
-        Point(248, -34), Point(249, -34), Point(249, -33), Point(250, -33),
-        Point(251, -32), Point(252, -32), Point(253, -31), Point(254, -31),
-        Point(255, -30), Point(256, -30), Point(256, -29), Point(257, -29),
-        Point(258, -28), Point(259, -28), Point(259, -27), Point(260, -27),
-        Point(261, -26), Point(262, -25), Point(263, -26), Point(266, -26),
-        Point(268, -27), Point(272, -29), Point(275, -30), Point(276, -32),
-      ])],
-  ])
 }
 
 // \u2500\u2500 Torn feathers tumble away above him \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
